@@ -1,7 +1,7 @@
 import type { FileApiFlavor, FileFlavor } from '@grammyjs/files'
 import type { HydrateApiFlavor, HydrateFlavor } from '@grammyjs/hydrate'
 import type { MenuOptions } from '@grammyjs/menu'
-import type { User } from '@prisma/client'
+import type { User, UserInviteCode } from '@prisma/client'
 import type { Api, Context, NextFunction, RawApi, SessionFlavor } from 'grammy'
 import { autoRetry } from '@grammyjs/auto-retry'
 import { type ConversationFlavor, conversations, type StringWithCommandSuggestions } from '@grammyjs/conversations'
@@ -20,7 +20,9 @@ import { prisma } from '../../common/prisma.js'
 import { ENV } from '../../constants/env.js'
 import { UserService } from '../user/user.service.js'
 
-export type TGBotUser = User
+export type TGBotUser = User & {
+  inviteCode: UserInviteCode
+}
 
 export interface TGBotSessionData {
   user: TGBotUser

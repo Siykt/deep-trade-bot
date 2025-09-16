@@ -1,7 +1,7 @@
 import { dirname } from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
-import { defineBalanceCommand, defineStartCommand } from './commands/index.js'
+import { defineBalanceCommand, defineInvitationCommand, defineStartCommand } from './commands/index.js'
 import logger from './common/logger.js'
 import { tgBotService } from './services/index.js'
 import 'reflect-metadata'
@@ -19,6 +19,7 @@ async function bootstrap() {
 
   defineStartCommand()
   defineBalanceCommand()
+  defineInvitationCommand()
   tgBotService.run()
   logger.info('Bot started')
 }
