@@ -1,0 +1,225 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator zod {
+  provider = "zod-prisma-types"
+}
+
+/// 用户表
+model User {
+  /// Telegram 用户 ID
+  id                String    @id @default(uuid())
+  /// Telegram 用户 ID
+  telegramId        String    @unique
+  /// Telegram 用户名
+  username          String?
+  /// Telegram 名
+  firstName         String?
+  /// Telegram 姓
+  lastName          String?
+  /// Telegram 头像
+  photoUrl          String?
+  /// 用户金币余额
+  coins             Int       @default(200)
+  /// 是否是会员
+  isVip             Boolean   @default(false)
+  /// 会员开始时间
+  vipStartAt        DateTime?
+  /// 会员过期时间
+  vipExpireAt       DateTime?
+  /// 会员等级
+  vipLevel          Int       @default(0)
+  /// 是否是 Telegram 高级会员
+  isTelegramPremium Boolean   @default(false)
+
+  /// 邀请码
+  inviteCodes         UserInviteCode[] @relation("UserCreatedInviteCode")
+  /// 直接上级用户ID
+  invitedByUserId     String?
+  /// 直接上级用户
+  InvitedBy           User?            @relation("DirectInvite", fields: [invitedByUserId], references: [id])
+  /// 直接下级用户
+  InvitedUsers        User[]           @relation("DirectInvite")
+  // 闭包表关联
+  AncestorRelations   UserAncestor[]   @relation("AncestorRelations")
+  DescendantRelations UserAncestor[]   @relation("DescendantRelations")
+  UserAncestors       UserAncestor[]   @relation("UserToAncestor")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // 关联
+  UsedInviteCodes UserInviteCode[] @relation("UserUsedInviteCode")
+  Order           Order[]
+  UserOrder       UserOrder[]
+}
+
+/// 用户邀请码表
+model UserInviteCode {
+  id           Int       @id @default(autoincrement())
+  code         String    @unique
+  createdAt    DateTime  @default(now())
+  expiresAt    DateTime?
+  /// 是否已使用
+  isUsed       Boolean   @default(false)
+  /// 使用者用户ID
+  usedByUserId String?
+  /// 使用者用户
+  UsedBy       User?     @relation(name: "UserUsedInviteCode", fields: [usedByUserId], references: [id])
+  /// 所属用户
+  userId       String
+  User         User      @relation(name: "UserCreatedInviteCode", fields: [userId], references: [id])
+}
+
+/// 用户祖先表
+model UserAncestor {
+  /// 祖先用户ID
+  ancestorId   String
+  /// 后代用户ID
+  descendantId String
+  /// 深度
+  depth        Int
+  /// 所属用户ID
+  userId       String?
+  User         User?   @relation(name: "UserToAncestor", fields: [userId], references: [id])
+  Ancestor     User    @relation("AncestorRelations", fields: [ancestorId], references: [id])
+  Descendant   User    @relation("DescendantRelations", fields: [descendantId], references: [id])
+
+  @@id([ancestorId, descendantId]) // 复合主键
+  @@index([descendantId, depth]) // 查询优化
+}
+
+/// 订单表
+model Order {
+  id                String    @id @default(uuid())
+  /// 用户ID
+  userId            String
+  /// 支付类型，如 "telegram_stars"、"ton"等
+  paymentType       String
+  /// 支付链接
+  paymentLink       String?
+  /// 外部支付交易ID
+  externalPaymentId String?   @unique
+  /// 主要货币金额
+  amount            Decimal
+  /// 法币等值金额
+  fiatAmount        Decimal
+  /// 汇率
+  exchangeRate      Decimal
+  /// 汇率有效时间（秒），默认10分钟
+  rateValidSeconds  Int       @default(600)
+  /// 单位秒（业务层验证1~604800）
+  customExpiration  Int       @default(3600)
+  /// 过期时间
+  expireAt          DateTime
+  /// 可扩展状态
+  status            String    @default("PENDING")
+  /// 原始支付数据
+  paymentData       String?
+  /// 最后检查时间
+  lastCheckedAt     DateTime?
+  /// 支付时间
+  paidAt            DateTime?
+  /// 支付交易ID
+  transactionId     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  OrderStatusHistory OrderStatusHistory[]
+  UserOrders         UserOrder?
+  User               User                 @relation(fields: [userId], references: [id])
+
+  @@index([status])
+  @@index([expireAt])
+  @@index([externalPaymentId])
+  @@index([createdAt])
+  @@map("orders")
+}
+
+/// 用户订单关联表
+model UserOrder {
+  id          String    @id @default(uuid())
+  /// 用户ID
+  userId      String
+  /// 订单ID
+  orderId     String    @unique
+  /// 购买数量
+  quantity    Int       @default(1)
+  /// 订单状态
+  status      String    @default("PENDING")
+  /// 订单完成时间
+  completedAt DateTime?
+  /// 商品ID
+  productId   String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  User    User    @relation(fields: [userId], references: [id])
+  Order   Order   @relation(fields: [orderId], references: [id])
+  Product Product @relation(fields: [productId], references: [id])
+
+  @@index([userId])
+  @@index([orderId])
+  @@index([status])
+}
+
+/// 订单状态变更记录表
+model OrderStatusHistory {
+  id        String   @id @default(uuid())
+  /// 从xx状态到xx状态
+  from      String   @default("PENDING")
+  to        String   @default("PENDING")
+  /// 变更时间
+  changedAt DateTime @default(now())
+  /// 元数据
+  metadata  String?
+  /// 订单ID
+  orderId   String
+
+  Order Order @relation(fields: [orderId], references: [id])
+
+  @@index([orderId, changedAt])
+}
+
+/// 商品表
+model Product {
+  id           String  @id @default(uuid())
+  /// 商品名称
+  name         String
+  /// 商品描述
+  description  String?
+  /// 商品类型
+  type         String
+  /// 价格
+  price        Decimal
+  /// 商品价值，如果商品类型为金币，则表示金币数量
+  value        Int     @default(0)
+  /// 折扣百分比（如20%的折扣为20）
+  discount     Int     @default(0)
+  /// 是否激活
+  isActive     Boolean @default(true)
+  /// 展示顺序
+  displayOrder Int     @default(0)
+  /// 扩展数据
+  metadata     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  UserOrders UserOrder[]
+}
+
+/// Telegram 消息会话表
+model TelegramMessageSession {
+  id    Int    @id @default(autoincrement())
+  key   String @unique
+  value String
+}

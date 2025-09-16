@@ -1,0 +1,3 @@
+{
+  "balance.message": "你的VIP过期时间 {{vipExpiresAt}}\n\nPremium价格：\n月费：{{premiumPriceMonth}}\n年费：{{premiumPriceYear}}  30%Off\n\nPremium权益： 可无限使用次数 可使用所有信息模式"
+}
