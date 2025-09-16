@@ -8,9 +8,8 @@ import { orderService, productService, tgBotService } from '../services/index.js
 
 function buildBalanceMessage(user: TGBotUser) {
   return i18n.t('balance.message', {
-    vipExpiresAt: user.vipExpireAt ? utcNow(user.vipExpireAt).format('YYYY-MM-DD HH:mm:ss') : '-',
-    premiumPriceMonth: 19.9,
-    premiumPriceYear: 169.9,
+    plan: user.isVip ? i18n.t('common.premium') : i18n.t('common.free'),
+    expiresAt: user.vipExpireAt ? utcNow(user.vipExpireAt).format('YYYY-MM-DD HH:mm:ss') : '-',
   })
 }
 

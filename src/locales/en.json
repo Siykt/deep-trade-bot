@@ -1,7 +1,7 @@
 {
   "analysis.loading": "Querying for you...",
-  "analysis.selectType": "Select the transaction type you wish to query for {{pair}}:\n\n⚡ Real-time Query: Clearly understand current market maker behavior for convenient trade planning  \n📊 Intraday Trading: Analyze the day's market maker activity, suitable for short-term operations  \n📈 Long-term Holding: Analyze long-term trends, ideal for value investing",
-  "balance.message": "Your VIP expiration date: {{vipExpiresAt}}\n\nPremium Pricing:\nMonthly Fee: {{premiumPriceMonth}}\nAnnual Fee: {{premiumPriceYear}}  30% Off\n\nPremium Benefits: Unlimited usage, access to all information modes.",
+  "analysis.selectType": "Select the transaction type you wish to query for {pair}:\n\n⚡ Real-time Query: Clearly understand current market maker behavior for convenient trade planning  \n📊 Intraday Trading: Analyze the day's market maker activity, suitable for short-term operations  \n📈 Long-term Holding: Analyze long-term trends, ideal for value investing",
+  "balance.message": "📦 Your Plan Status: {plan}\n⏰ Expiry Date: {expiresAt}\n🔥 Upgrade to unlock ALL features & enjoy UNLIMITED usage! 🔓",
   "analysis.realtime": "Realtime",
   "analysis.longterm": "Longterm",
   "analysis.intraday": "Intraday",

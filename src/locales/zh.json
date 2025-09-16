@@ -1,6 +1,6 @@
 {
-  "balance.message": "你的VIP过期时间 {{vipExpiresAt}}\n\nPremium价格：\n月费：{{premiumPriceMonth}}\n年费：{{premiumPriceYear}}  30%Off\n\nPremium权益： 可无限使用次数 可使用所有信息模式",
-  "analysis.selectType": "选择你要查询{{pair}}的交易类型：\n\n ⚡实时查询：清晰当下庄家行为，方便布局交易\n📊日内交易：分析当日庄家行为，适合短线操作\n📈长期持有：分析长期趋势，适合价值投资",
+  "balance.message": "📦 您的套餐状态：{plan}  \n⏰ 到期日期：{expiresAt}  \n🔥 升级即可解锁全部功能，享受无限使用权限！🔓",
+  "analysis.selectType": "选择你要查询{pair}的交易类型：\n\n ⚡实时查询：清晰当下庄家行为，方便布局交易\n📊日内交易：分析当日庄家行为，适合短线操作\n📈长期持有：分析长期趋势，适合价值投资",
   "analysis.loading": "正在为您查询......",
   "analysis.realtime": "实时查询",
   "analysis.longterm": "长期持有",
@@ -14,6 +14,8 @@
   "analysis.emptyPopularity": "空单热门🔥",
   "analysis.tradeAnalysisDescription": "选择你要查询的币种：\n15秒内未返回数据，可能该币未收录或庄家不在场，请尝试其他币种或稍后再试",
   "command.start.description": "汇集全球主流交易所及链上数据, 一秒看懂庄家行为",
-  "invitation.description": "🔥 邀请你的好友加入 {{botName}}",
-  "invitation.message": "🚀 欢迎加入 {{botName}} 的邀请联盟！🎁\n每成功邀请一位好友，即可获得 *5 次免费*投资预测机会！💰\n这是您的专属邀请链接：\n👉 `{{link}}`\n已邀请人数：{{count}} 📊"
+  "invitation.description": "🔥 邀请你的好友加入 {botName}",
+  "invitation.message": "🚀 欢迎加入 {botName} 的邀请联盟！🎁\n每成功邀请一位好友，即可获得 *5 次免费*投资预测机会！💰\n这是您的专属邀请链接：\n👉 `{- link}`\n已邀请人数：{count} 📊",
+  "common.free": "免费会员",
+  "common.premium": "高级会员"
 }
