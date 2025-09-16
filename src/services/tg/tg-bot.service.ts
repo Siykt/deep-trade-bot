@@ -3,6 +3,7 @@ import type { HydrateApiFlavor, HydrateFlavor } from '@grammyjs/hydrate'
 import type { MenuOptions } from '@grammyjs/menu'
 import type { User, UserInviteCode } from '@prisma/client'
 import type { Api, Context, NextFunction, RawApi, SessionFlavor } from 'grammy'
+import type { i18n, TFunction } from 'i18next'
 import { autoRetry } from '@grammyjs/auto-retry'
 import { type ConversationFlavor, conversations, type StringWithCommandSuggestions } from '@grammyjs/conversations'
 import { hydrateFiles } from '@grammyjs/files'
@@ -11,6 +12,7 @@ import { Menu } from '@grammyjs/menu'
 import { run } from '@grammyjs/runner'
 import { PrismaAdapter } from '@grammyjs/storage-prisma'
 import { Bot, session } from 'grammy'
+import i18next from 'i18next'
 import { inject } from 'inversify'
 import _ from 'lodash'
 import { SocksProxyAgent } from 'socks-proxy-agent'
@@ -35,7 +37,10 @@ export interface TGBotSessionData {
   }
 }
 
-export type TGBotContext = FileFlavor<HydrateFlavor<ConversationFlavor<Context>>> & SessionFlavor<TGBotSessionData>
+export type TGBotContext = FileFlavor<HydrateFlavor<ConversationFlavor<Context>>> & SessionFlavor<TGBotSessionData> & {
+  i18n: i18n
+  t: TFunction
+}
 
 export type TGBotApi = FileApiFlavor<HydrateApiFlavor<Api>>
 
@@ -82,6 +87,23 @@ export class TGBotService extends Bot<TGBotContext, TGBotApi> {
     this.use(hydrateContext())
     this.use(conversations())
     this.registerSession()
+
+    this.use(async (ctx, next) => {
+      const i18n = i18next.cloneInstance({ initAsync: false, initImmediate: false })
+      const language = ctx.from?.language_code ?? i18n.language
+      const languageCode = language === 'zh-hans' ? 'zh' : 'en'
+      this.updateSession(ctx, { languageCode: ctx.session.languageCode ?? languageCode })
+
+      logger.debug(`[TGBotService] languageCode: ${languageCode}`)
+      if (ctx.session?.languageCode && ctx.session.languageCode !== languageCode) {
+        i18n.changeLanguage(ctx.session.languageCode)
+        logger.debug(`[TGBotService] languageCode changed: ${ctx.session.languageCode}`)
+      }
+
+      ctx.i18n = i18n
+      ctx.t = i18n.t.bind(i18n)
+      await next()
+    })
 
     this.api.config.use(hydrateFiles(this.token))
     this.api.config.use(hydrateApi())

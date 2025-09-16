@@ -13,5 +13,14 @@
   "analysis.emptyPopularity": "Hot Short Orders 🔥",
   "analysis.multiSinglePopularity": "Hot buy orders 🔥",
   "analysis.tradeAnalysis": "📊 Currency Analysis",
-  "analysis.tradeAnalysisDescription": "Select the currency you wish to inquire about:  \nIf no data is returned within 15 seconds, it may be that the currency is not listed or the market maker is not present. Please try another currency or try again later."
+  "analysis.tradeAnalysisDescription": "Select the currency you wish to inquire about:  \nIf no data is returned within 15 seconds, it may be that the currency is not listed or the market maker is not present. Please try another currency or try again later.",
+  "common.free": "Free membership",
+  "common.premium": "Premium Member",
+  "invitation.description": "🔥 Invite your friends to join {botName}",
+  "invitation.message": "🚀 Welcome to {botName}'s Invitation Alliance! 🎁  \nFor every friend you successfully invite, you'll get *5 free* investment prediction opportunities! 💰  \nHere is your exclusive invitation link:  \n👉 `{- link}`  \nNumber of people invited: {count} 📊",
+  "language.description": "Change your language",
+  "language.en": "English",
+  "language.message": "Please select the language you wish to change.",
+  "language.updated": "Update successful",
+  "language.zh": "简体中文"
 }

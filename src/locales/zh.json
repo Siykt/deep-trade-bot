@@ -17,5 +17,10 @@
   "invitation.description": "🔥 邀请你的好友加入 {botName}",
   "invitation.message": "🚀 欢迎加入 {botName} 的邀请联盟！🎁\n每成功邀请一位好友，即可获得 *5 次免费*投资预测机会！💰\n这是您的专属邀请链接：\n👉 `{- link}`\n已邀请人数：{count} 📊",
   "common.free": "免费会员",
-  "common.premium": "高级会员"
+  "common.premium": "高级会员",
+  "language.description": "更改你的语言",
+  "language.message": "请选择你希望更改的语言",
+  "language.zh": "简体中文",
+  "language.en": "English",
+  "language.updated": "更新成功"
 }

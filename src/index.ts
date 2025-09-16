@@ -1,9 +1,9 @@
 import { dirname } from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
-import { defineBalanceCommand, defineInvitationCommand, defineStartCommand } from './commands/index.js'
 import logger from './common/logger.js'
 import { tgBotService } from './services/index.js'
+import './commands/index.js'
 import 'reflect-metadata'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -17,9 +17,6 @@ async function bootstrap() {
     logger.error('Unhandled Rejection at:', reason)
   })
 
-  defineStartCommand()
-  defineBalanceCommand()
-  defineInvitationCommand()
   tgBotService.run()
   logger.info('Bot started')
 }
