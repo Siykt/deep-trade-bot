@@ -1,14 +1,13 @@
-import type { TGBotUser } from '../services/tg/tg-bot.service.js'
+import type { TGBotContext, TGBotUser } from '../services/tg/tg-bot.service.js'
 import { UserRejectsError } from '@tonconnect/sdk'
 import { InlineKeyboard } from 'grammy'
 import { utcNow } from '../common/date.js'
 import logger from '../common/logger.js'
-import i18n from '../locales/index.js'
 import { orderService, productService, tgBotService } from '../services/index.js'
 
-function buildBalanceMessage(user: TGBotUser) {
-  return i18n.t('balance.message', {
-    plan: user.isVip ? i18n.t('common.premium') : i18n.t('common.free'),
+function buildBalanceMessage(ctx: TGBotContext, user: TGBotUser) {
+  return ctx.i18n.t('balance.message', {
+    plan: user.isVip ? ctx.i18n.t('common.premium') : ctx.i18n.t('common.free'),
     expiresAt: user.vipExpireAt ? utcNow(user.vipExpireAt).format('YYYY-MM-DD HH:mm:ss') : '-',
   })
 }
@@ -87,7 +86,7 @@ export function defineBalanceCommand() {
         const sendTransactionAndReply = async () => {
           const inlineKeyboard = new InlineKeyboard()
           inlineKeyboard.url('💎 Pay', paymentLink)
-          const message = await ctx.reply('Payment is processing, please open your wallet to pay', {
+          const message = await ctx.reply(ctx.i18n.t('balance.paymentProcessing'), {
             reply_markup: inlineKeyboard,
           })
 
@@ -96,12 +95,12 @@ export function defineBalanceCommand() {
           }
           catch (error) {
             if (error instanceof UserRejectsError) {
-              await message.editText('You rejected the payment, please try again')
+              await message.editText(ctx.i18n.t('balance.paymentRejected'))
               return
             }
 
             logger.error(`[BalanceCommand] payment failed: ${order.id}, error: ${error}`)
-            await message.editText('Payment failed, please try again')
+            await message.editText(ctx.i18n.t('balance.paymentFailed'))
           }
         }
 
@@ -111,7 +110,7 @@ export function defineBalanceCommand() {
         else {
           const inlineKeyboard = new InlineKeyboard()
           inlineKeyboard.url('🔗 Connect Wallet', paymentLink)
-          const message = await ctx.reply('Please connect your Ton wallet to continue', {
+          const message = await ctx.reply(ctx.i18n.t('balance.connectWallet'), {
             reply_markup: inlineKeyboard,
           })
           wallet.connecter.onStatusChange(async (wallet) => {
@@ -128,7 +127,7 @@ export function defineBalanceCommand() {
         tgBotService.updateSession(ctx, {
           paymentInfo: undefined,
         })
-        await ctx.editMessageText(buildBalanceMessage(ctx.session.user), { reply_markup: balanceMenu })
+        await ctx.editMessageText(buildBalanceMessage(ctx, ctx.session.user), { reply_markup: balanceMenu })
       })
     }
     else {
@@ -139,7 +138,7 @@ export function defineBalanceCommand() {
               productId: product.id,
             },
           })
-          await ctx.editMessageText(`Buy ${product.description || product.name}\n\nPlease select your payment method:`)
+          await ctx.editMessageText(ctx.i18n.t('balance.buyProduct', { product: product.description || product.name }))
         }).row()
       }
     }
@@ -148,9 +147,10 @@ export function defineBalanceCommand() {
   tgBotService.use(balanceMenu)
   tgBotService.defineCommand({
     command: 'balance',
-    description: 'Balance',
+    description: 'balance.command.description',
+    i18n: true,
     callback: async (ctx) => {
-      await ctx.reply(buildBalanceMessage(ctx.session.user), { reply_markup: balanceMenu })
+      await ctx.reply(buildBalanceMessage(ctx, ctx.session.user), { reply_markup: balanceMenu })
     },
   })
 }

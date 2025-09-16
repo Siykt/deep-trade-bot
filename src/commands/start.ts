@@ -1,16 +1,15 @@
 import type { WhaleAnalysisType } from '../services/external/coinIFT.js'
 import type { TGBotContext } from '../services/tg/tg-bot.service.js'
 import { CONFIG } from '../constants/config.js'
-import i18n from '../locales/index.js'
 import { coinIFTService, tgBotService } from '../services/index.js'
 
 async function answerWhaleAnalysis(ctx: TGBotContext, type: WhaleAnalysisType) {
   if (!ctx.session.pair) {
-    ctx.answerCallbackQuery({ text: i18n.t('analysis.invalidInput') })
+    ctx.answerCallbackQuery({ text: ctx.i18n.t('analysis.invalidInput') })
     return
   }
 
-  ctx.answerCallbackQuery({ text: i18n.t('analysis.loading') })
+  ctx.answerCallbackQuery({ text: ctx.i18n.t('analysis.loading') })
   const response = await coinIFTService.getWhaleAnalysisAndRecord(ctx.session.user, ctx.session.pair, type)
   ctx.reply(response.result)
 }
@@ -22,16 +21,18 @@ export function defineStartCommand() {
     autoAnswer: false,
   })
 
-  analysisMenu.text(i18n.t('analysis.realtime'), async (ctx) => {
-    await answerWhaleAnalysis(ctx, coinIFTService.type.Realtime)
-  }).row()
+  analysisMenu.dynamic(async (ctx, analysisMenu) => {
+    analysisMenu.text(ctx.i18n.t('analysis.realtime'), async (ctx) => {
+      await answerWhaleAnalysis(ctx, coinIFTService.type.Realtime)
+    }).row()
 
-  analysisMenu.text(i18n.t('analysis.intraday'), async (ctx) => {
-    await answerWhaleAnalysis(ctx, coinIFTService.type.Intraday)
-  }).row()
+    analysisMenu.text(ctx.i18n.t('analysis.intraday'), async (ctx) => {
+      await answerWhaleAnalysis(ctx, coinIFTService.type.Intraday)
+    }).row()
 
-  analysisMenu.text(i18n.t('analysis.longterm'), async (ctx) => {
-    await answerWhaleAnalysis(ctx, coinIFTService.type.Longterm)
+    analysisMenu.text(ctx.i18n.t('analysis.longterm'), async (ctx) => {
+      await answerWhaleAnalysis(ctx, coinIFTService.type.Longterm)
+    })
   })
 
   Object.entries(CONFIG.TRADE_PAIRS).forEach(([key], i) => {
@@ -40,37 +41,42 @@ export function defineStartCommand() {
         state: 'none',
         pair: key,
       })
-      ctx.reply(i18n.t('analysis.selectType', { pair: key }), { reply_markup: analysisMenu })
+      ctx.reply(ctx.i18n.t('analysis.selectType', { pair: key }), { reply_markup: analysisMenu })
     })
     if (i % 2) {
       searchTradePairMenu.row()
     }
   })
-  searchTradePairMenu.text(i18n.t('analysis.others'), async (ctx) => {
-    tgBotService.updateSession(ctx, {
-      state: 'searchTradePair',
+
+  searchTradePairMenu.dynamic(async (ctx, searchTradePairMenu) => {
+    searchTradePairMenu.text(ctx.i18n.t('analysis.others'), async (ctx) => {
+      tgBotService.updateSession(ctx, {
+        state: 'searchTradePair',
+      })
+      ctx.reply(ctx.i18n.t('analysis.inputPair'))
     })
-    ctx.reply(i18n.t('analysis.inputPair'))
   })
 
-  // startMenu.text(i18n.t('analysis.multiSinglePopularity'), async (ctx) => {
-  //   tgBotService.updateSession(ctx, {
-  //     state: 'none',
-  //     pair: 'BTC',
-  //   })
-  //   ctx.reply(i18n.t('analysis.selectType'), { reply_markup: analysisMenu })
-  // })
+  startMenu.dynamic(async (ctx, startMenu) => {
+    startMenu.text(ctx.i18n.t('analysis.multiSinglePopularity'), async (ctx) => {
+      tgBotService.updateSession(ctx, {
+        state: 'none',
+        pair: 'BTC',
+      })
+      ctx.reply(ctx.i18n.t('analysis.selectType'), { reply_markup: analysisMenu })
+    })
 
-  // startMenu.text(i18n.t('analysis.emptyPopularity'), async (ctx) => {
-  //   tgBotService.updateSession(ctx, {
-  //     state: 'none',
-  //     pair: 'BTC',
-  //   })
-  //   ctx.reply(i18n.t('analysis.selectType'), { reply_markup: analysisMenu })
-  // }).row()
+    startMenu.text(ctx.i18n.t('analysis.emptyPopularity'), async (ctx) => {
+      tgBotService.updateSession(ctx, {
+        state: 'none',
+        pair: 'BTC',
+      })
+      ctx.reply(ctx.i18n.t('analysis.selectType'), { reply_markup: analysisMenu })
+    }).row()
 
-  startMenu.text(i18n.t('analysis.tradeAnalysis'), async (ctx) => {
-    ctx.reply(i18n.t('analysis.tradeAnalysisDescription'), { reply_markup: searchTradePairMenu })
+    startMenu.text(ctx.i18n.t('analysis.tradeAnalysis'), async (ctx) => {
+      ctx.reply(ctx.i18n.t('analysis.tradeAnalysisDescription'), { reply_markup: searchTradePairMenu })
+    })
   })
 
   startMenu.register(searchTradePairMenu)
@@ -78,9 +84,10 @@ export function defineStartCommand() {
   tgBotService.use(startMenu)
   tgBotService.defineCommand({
     command: 'start',
-    description: i18n.t('command.start.description'),
+    i18n: true,
+    description: 'command.start.description',
     callback: async (ctx) => {
-      ctx.reply(i18n.t('analysis.description'), { reply_markup: startMenu })
+      ctx.reply(ctx.i18n.t('analysis.description'), { reply_markup: startMenu })
     },
   })
 
@@ -89,7 +96,7 @@ export function defineStartCommand() {
   }, async (ctx) => {
     const pair = ctx.msg.text?.trim().toUpperCase()
     if (!pair) {
-      ctx.reply(i18n.t('analysis.invalidInput'))
+      ctx.reply(ctx.i18n.t('analysis.invalidInput'))
       return
     }
 
@@ -97,6 +104,6 @@ export function defineStartCommand() {
       state: 'none',
       pair,
     })
-    ctx.reply(i18n.t('analysis.selectType', { pair }), { reply_markup: analysisMenu })
+    ctx.reply(ctx.i18n.t('analysis.selectType', { pair }), { reply_markup: analysisMenu })
   })
 }

@@ -3,7 +3,7 @@ import type { HydrateApiFlavor, HydrateFlavor } from '@grammyjs/hydrate'
 import type { MenuOptions } from '@grammyjs/menu'
 import type { User, UserInviteCode } from '@prisma/client'
 import type { Api, Context, NextFunction, RawApi, SessionFlavor } from 'grammy'
-import type { i18n, TFunction } from 'i18next'
+import type { TFunction } from 'i18next'
 import { autoRetry } from '@grammyjs/auto-retry'
 import { type ConversationFlavor, conversations, type StringWithCommandSuggestions } from '@grammyjs/conversations'
 import { hydrateFiles } from '@grammyjs/files'
@@ -20,6 +20,7 @@ import { Service } from '../../common/decorators/service.js'
 import logger from '../../common/logger.js'
 import { prisma } from '../../common/prisma.js'
 import { ENV } from '../../constants/env.js'
+import i18n, { languages } from '../../locales/index.js'
 import { UserService } from '../user/user.service.js'
 
 export type TGBotUser = User & {
@@ -38,7 +39,7 @@ export interface TGBotSessionData {
 }
 
 export type TGBotContext = FileFlavor<HydrateFlavor<ConversationFlavor<Context>>> & SessionFlavor<TGBotSessionData> & {
-  i18n: i18n
+  i18n: typeof i18n
   t: TFunction
 }
 
@@ -58,7 +59,9 @@ export interface TGCommand {
   description: string
   callback: (ctx: TGBotContext, next: NextFunction) => unknown
   register?: boolean
-  privite?: boolean
+  private?: boolean
+  i18n?: boolean
+  i18nData?: () => Record<string, string>
 }
 
 @Service()
@@ -91,7 +94,7 @@ export class TGBotService extends Bot<TGBotContext, TGBotApi> {
     this.use(async (ctx, next) => {
       const i18n = i18next.cloneInstance({ initAsync: false, initImmediate: false })
       const language = ctx.from?.language_code ?? i18n.language
-      const languageCode = language === 'zh-hans' ? 'zh' : 'en'
+      const languageCode = (language === 'zh-hans' || language === 'zh') ? 'zh' : 'en'
       this.updateSession(ctx, { languageCode: ctx.session.languageCode ?? languageCode })
 
       logger.debug(`[TGBotService] languageCode: ${languageCode}`)
@@ -179,7 +182,7 @@ export class TGBotService extends Bot<TGBotContext, TGBotApi> {
    */
   defineCommand(params: TGCommand) {
     const { command, callback } = params
-    if (params.privite) {
+    if (params.private) {
       this.on('message').filter(ctx => ctx.msg.chat.type === 'private').command(command, callback)
     }
     else {
@@ -191,10 +194,15 @@ export class TGBotService extends Bot<TGBotContext, TGBotApi> {
   /**
    * setup commands
    */
-  setupCommands() {
-    return this.api.setMyCommands(Array.from(this.commands.values())
-      .filter(({ register }) => register !== false)
-      .map(({ command, description }) => ({ command, description })))
+  async setupCommands() {
+    const commands = Array.from(this.commands.values())
+    const normalCommands = commands.filter(({ register, description }) => register !== false && description)
+    const i18nCommands = normalCommands.filter(({ i18n }) => i18n === true)
+
+    await this.api.setMyCommands(normalCommands.map(({ command, description }) => ({ command, description })))
+    languages.forEach((language) => {
+      this.api.setMyCommands(i18nCommands.map(({ command, description, i18nData }) => ({ command, description: i18n.t(description, i18nData?.() ?? {}) })), { language_code: language.code })
+    })
   }
 
   /**

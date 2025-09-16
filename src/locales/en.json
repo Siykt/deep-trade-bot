@@ -22,5 +22,11 @@
   "language.en": "English",
   "language.message": "Please select the language you wish to change.",
   "language.updated": "Update successful",
-  "language.zh": "简体中文"
+  "language.zh": "简体中文",
+  "balance.buyProduct": "To purchase {product}, please select your payment method.",
+  "balance.command.description": "Check your balance and subscription status",
+  "balance.connectWallet": "Please connect your wallet to continue.",
+  "balance.paymentFailed": "Payment failed, please try again.",
+  "balance.paymentProcessing": "Payment processing, please open your wallet to complete the payment.",
+  "balance.paymentRejected": "You have declined the payment, please try again."
 }
