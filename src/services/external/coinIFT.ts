@@ -33,6 +33,14 @@ export class CoinIFTService {
   ) {
   }
 
+  isEnoughCost(user: User, cost: number) {
+    if (user.isVip) {
+      return true
+    }
+
+    return user.coins >= cost
+  }
+
   async getWhaleAnalysis(symbol: string, type: WhaleAnalysisType) {
     const response = await fetch(`${this.baseURL}/whale/analysis`, {
       method: 'POST',
@@ -46,7 +54,7 @@ export class CoinIFTService {
   }
 
   async getWhaleAnalysisAndRecord(user: User, symbol: string, type: WhaleAnalysisType) {
-    if (!this.userService.isEnoughCost(user, CONFIG.COST.ANALYSIS)) {
+    if (!this.isEnoughCost(user, CONFIG.COST.ANALYSIS)) {
       throw new ApiError(ApiErrorCode.USER_BALANCE_NOT_ENOUGH, 'User balance not enough')
     }
 

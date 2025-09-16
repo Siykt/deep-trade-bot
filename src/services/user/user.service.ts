@@ -382,14 +382,4 @@ export class UserService {
     })
     return descendants
   }
-
-  /**
-   * 判断用户是否足够消耗
-   * @param user 用户
-   * @param cost 消耗
-   * @returns 是否足够
-   */
-  isEnoughCost(user: User, cost: number) {
-    return user.coins >= cost
-  }
 }

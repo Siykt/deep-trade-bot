@@ -1,6 +1,19 @@
+import type { WhaleAnalysisType } from '../services/external/coinIFT.js'
+import type { TGBotContext } from '../services/tg/tg-bot.service.js'
 import { CONFIG } from '../constants/config.js'
 import i18n from '../locales/index.js'
 import { coinIFTService, tgBotService } from '../services/index.js'
+
+async function answerWhaleAnalysis(ctx: TGBotContext, type: WhaleAnalysisType) {
+  if (!ctx.session.pair) {
+    ctx.answerCallbackQuery({ text: i18n.t('analysis.invalidInput') })
+    return
+  }
+
+  ctx.answerCallbackQuery({ text: i18n.t('analysis.loading') })
+  const response = await coinIFTService.getWhaleAnalysisAndRecord(ctx.session.user, ctx.session.pair, type)
+  ctx.reply(response.result)
+}
 
 export function defineStartCommand() {
   const startMenu = tgBotService.createMenu('start')
@@ -10,21 +23,15 @@ export function defineStartCommand() {
   })
 
   analysisMenu.text(i18n.t('analysis.realtime'), async (ctx) => {
-    ctx.answerCallbackQuery({ text: i18n.t('analysis.loading') })
-    const response = await coinIFTService.getWhaleAnalysis('BTC', coinIFTService.type.Realtime)
-    ctx.reply(response.data.message)
+    await answerWhaleAnalysis(ctx, coinIFTService.type.Realtime)
   }).row()
 
   analysisMenu.text(i18n.t('analysis.intraday'), async (ctx) => {
-    ctx.answerCallbackQuery({ text: i18n.t('analysis.loading') })
-    const response = await coinIFTService.getWhaleAnalysis('BTC', coinIFTService.type.Intraday)
-    ctx.reply(response.data.message)
+    await answerWhaleAnalysis(ctx, coinIFTService.type.Intraday)
   }).row()
 
   analysisMenu.text(i18n.t('analysis.longterm'), async (ctx) => {
-    ctx.answerCallbackQuery({ text: i18n.t('analysis.loading') })
-    const response = await coinIFTService.getWhaleAnalysis('BTC', coinIFTService.type.Longterm)
-    ctx.reply(response.data.message)
+    await answerWhaleAnalysis(ctx, coinIFTService.type.Longterm)
   })
 
   Object.entries(CONFIG.TRADE_PAIRS).forEach(([key], i) => {
