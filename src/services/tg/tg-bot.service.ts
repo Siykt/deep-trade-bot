@@ -131,6 +131,7 @@ export class TGBotService extends Bot<TGBotContext, TGBotApi> {
   }
 
   async run() {
+    await this.init()
     await this.setupCommands()
     return run(this)
   }

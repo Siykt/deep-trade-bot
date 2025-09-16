@@ -7,6 +7,9 @@ const i18n = i18next
 i18next.init({
   lng: 'zh',
   fallbackLng: 'zh',
+  interpolation: {
+    escapeValue: false,
+  },
   resources: {
     en: {
       translation: en,

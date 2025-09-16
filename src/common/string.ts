@@ -51,9 +51,10 @@ export function formatMarkdownMessages(text: string) {
 
       // 处理需要双重转义的字符
       if (doubleEscape.test(char)) {
-        if (stack.at(-1) === char) {
-          stack.pop()
-          indexes.pop()
+        const index = stack.findIndex(c => c === char)
+        if (index !== -1) {
+          stack.splice(index, 1)
+          indexes.splice(index, 1)
         }
         else {
           stack.push(char)
