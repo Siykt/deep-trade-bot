@@ -60,14 +60,14 @@ export const CONFIG = {
     // 默认会员产品
     SUBSCRIPTIONS: [
       {
-        name: 'Monthly Subscription',
-        description: 'Monthly Subscription',
+        name: 'product.monthly',
+        description: 'product.monthly.description',
         value: 30,
         price: 19.99,
       },
       {
-        name: 'Yearly Subscription',
-        description: 'Yearly Subscription',
+        name: 'product.yearly',
+        description: 'product.yearly.description',
         value: 365,
         price: 169.99,
         discount: 30,

@@ -420,9 +420,11 @@ export class OrderService {
    * @param productId 商品ID
    * @param quantity 数量
    * @param chatId 聊天ID
+   * @param title 标题
+   * @param description 描述
    * @returns 订单
    */
-  async createAndSendProduceOrderWithStars(user: User, productId: string, quantity: number, chatId: string) {
+  async createAndSendProduceOrderWithStars(user: User, productId: string, quantity: number, chatId: string, title?: string, description?: string) {
     const product = await this.productService.findByIdOrThrow(productId)
     const fiatAmount = isDev() ? 0.01 : product.price.mul(quantity).toNumber()
     const amount = this.tgPaymentService.convertUSDToStars(fiatAmount)
@@ -431,8 +433,8 @@ export class OrderService {
 
     const { message, payload } = await this.tgPaymentService.sendStarsInvoiceMessage({
       stars: amount,
-      title: product.name,
-      description: product.description ?? 'Buy Telegram Stars',
+      title: title || product.name,
+      description: description || product.description || 'Buy Telegram Stars',
       chatId,
     })
 

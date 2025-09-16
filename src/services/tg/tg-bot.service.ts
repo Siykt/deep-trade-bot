@@ -90,23 +90,7 @@ export class TGBotService extends Bot<TGBotContext, TGBotApi> {
     this.use(hydrateContext())
     this.use(conversations())
     this.registerSession()
-
-    this.use(async (ctx, next) => {
-      const i18n = i18next.cloneInstance({ initAsync: false, initImmediate: false })
-      const language = ctx.from?.language_code ?? i18n.language
-      const languageCode = (language === 'zh-hans' || language === 'zh') ? 'zh' : 'en'
-      this.updateSession(ctx, { languageCode: ctx.session.languageCode ?? languageCode })
-
-      logger.debug(`[TGBotService] languageCode: ${languageCode}`)
-      if (ctx.session?.languageCode && ctx.session.languageCode !== languageCode) {
-        i18n.changeLanguage(ctx.session.languageCode)
-        logger.debug(`[TGBotService] languageCode changed: ${ctx.session.languageCode}`)
-      }
-
-      ctx.i18n = i18n
-      ctx.t = i18n.t.bind(i18n)
-      await next()
-    })
+    this.registerI18n()
 
     this.api.config.use(hydrateFiles(this.token))
     this.api.config.use(hydrateApi())
@@ -153,6 +137,40 @@ export class TGBotService extends Bot<TGBotContext, TGBotApi> {
     })
 
     logger.info('[TGBotService] Register session success')
+  }
+
+  private registerI18n() {
+    this.use(async (ctx, next) => {
+      let canVisitSession = true
+      try {
+        this.updateSession(ctx, {})
+      }
+      catch {
+        canVisitSession = false
+      }
+
+      const i18n = i18next.cloneInstance({ initAsync: false, initImmediate: false })
+      const language = ctx.from?.language_code ?? i18n.language
+      const languageCode = (language === 'zh-hans' || language === 'zh') ? 'zh' : 'en'
+
+      if (!canVisitSession) {
+        ctx.i18n = i18n
+        ctx.t = i18n.t.bind(i18n)
+        return next()
+      }
+
+      this.updateSession(ctx, { languageCode: ctx.session.languageCode ?? languageCode })
+
+      logger.debug(`[TGBotService] languageCode: ${languageCode}`)
+      if (ctx.session?.languageCode && ctx.session.languageCode !== languageCode) {
+        i18n.changeLanguage(ctx.session.languageCode)
+        logger.debug(`[TGBotService] languageCode changed: ${ctx.session.languageCode}`)
+      }
+
+      ctx.i18n = i18n
+      ctx.t = i18n.t.bind(i18n)
+      await next()
+    })
   }
 
   async run() {

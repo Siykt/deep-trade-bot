@@ -24,6 +24,7 @@ export function setupI18n() {
     interpolation: {
       prefix: '{',
       suffix: '}',
+      escapeValue: false,
     },
     resources: Object.fromEntries(languages.map(language => [language.code, { translation: language.file }])),
   })

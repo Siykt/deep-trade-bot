@@ -17,7 +17,7 @@
   "common.free": "Free membership",
   "common.premium": "Premium Member",
   "invitation.description": "🔥 Invite your friends to join {botName}",
-  "invitation.message": "🚀 Welcome to {botName}'s Invitation Alliance! 🎁  \nFor every friend you successfully invite, you'll get *5 free* investment prediction opportunities! 💰  \nHere is your exclusive invitation link:  \n👉 `{- link}`  \nNumber of people invited: {count} 📊",
+  "invitation.message": "🚀 Welcome to {botName}'s Invitation Alliance! 🎁  \nFor every friend you successfully invite, you'll get *5 free* investment prediction opportunities! 💰  \nHere is your exclusive invitation link:  \n👉 `{link}`  \nNumber of people invited: {count} 📊",
   "language.description": "Change your language",
   "language.en": "English",
   "language.message": "Please select the language you wish to change.",
@@ -28,5 +28,9 @@
   "balance.connectWallet": "Please connect your wallet to continue.",
   "balance.paymentFailed": "Payment failed, please try again.",
   "balance.paymentProcessing": "Payment processing, please open your wallet to complete the payment.",
-  "balance.paymentRejected": "You have declined the payment, please try again."
+  "balance.paymentRejected": "You have declined the payment, please try again.",
+  "product.monthly": "1 Month Premium",
+  "product.yearly": "1 Year Premium",
+  "product.monthly.description": "1 Month Premium/19.9$",
+  "product.yearly.description": "1 Year Premium/169.9$(30%off)"
 }
