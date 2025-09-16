@@ -27,6 +27,7 @@ export type TGBotUser = User & {
 export interface TGBotSessionData {
   user: TGBotUser
   state?: 'searchTradePair' | 'none'
+  pair?: string
   languageCode?: string
   paymentInfo?: {
     productId?: string

@@ -1,5 +1,6 @@
 import { Container } from 'inversify'
 import { getRegisteredServices } from '../common/decorators/service.js'
+import { CoinIFTService } from './external/coinIFT.js'
 import { OrderService } from './order/order.service.js'
 import { ProductService } from './product/product.service.js'
 import { TGBotService } from './tg/tg-bot.service.js'
@@ -17,3 +18,4 @@ export const userService = container.get(UserService)
 export const tgPaymentService = container.get(TGPaymentService)
 export const orderService = container.get(OrderService)
 export const productService = container.get(ProductService)
+export const coinIFTService = container.get(CoinIFTService)

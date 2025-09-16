@@ -1,0 +1,17 @@
+{
+  "balance.message": "你的VIP过期时间 {{vipExpiresAt}}\n\nPremium价格：\n月费：{{premiumPriceMonth}}\n年费：{{premiumPriceYear}}  30%Off\n\nPremium权益： 可无限使用次数 可使用所有信息模式",
+  "analysis.selectType": "选择你要查询{{pair}}的交易类型：\n\n ⚡实时查询：清晰当下庄家行为，方便布局交易\n📊日内交易：分析当日庄家行为，适合短线操作\n📈长期持有：分析长期趋势，适合价值投资",
+  "analysis.loading": "正在为您查询......",
+  "analysis.realtime": "实时查询",
+  "analysis.longterm": "长期持有",
+  "analysis.intraday": "日内交易",
+  "analysis.others": "其他(手动输入)",
+  "analysis.inputPair": "请输入你要查询的币种：",
+  "analysis.invalidInput": "非法输入，请重新输入你要查询的币种：",
+  "analysis.description": "选择你要查询的交易类型：\n🔥 多单热门/空单热门：捕捉当前大资金动态，多空单布局，寻找投资机会\n📊 币种分析：分析当前庄家行为，寻找短线投资机会和精确投资建议",
+  "analysis.tradeAnalysis": "📊币种分析",
+  "analysis.multiSinglePopularity": "多单热门🔥",
+  "analysis.emptyPopularity": "空单热门🔥",
+  "analysis.tradeAnalysisDescription": "选择你要查询的币种：\n15秒内未返回数据，可能该币未收录或庄家不在场，请尝试其他币种或稍后再试",
+  "command.start.description": "汇集全球主流交易所及链上数据, 一秒看懂庄家行为"
+}

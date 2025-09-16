@@ -1,3 +1,17 @@
 {
-  "balance.message": "你的VIP过期时间 {{vipExpiresAt}}\n\nPremium价格：\n月费：{{premiumPriceMonth}}\n年费：{{premiumPriceYear}}  30%Off\n\nPremium权益： 可无限使用次数 可使用所有信息模式"
+  "analysis.loading": "Querying for you...",
+  "analysis.selectType": "Select the transaction type you wish to query for {{pair}}:\n\n⚡ Real-time Query: Clearly understand current market maker behavior for convenient trade planning  \n📊 Intraday Trading: Analyze the day's market maker activity, suitable for short-term operations  \n📈 Long-term Holding: Analyze long-term trends, ideal for value investing",
+  "balance.message": "Your VIP expiration date: {{vipExpiresAt}}\n\nPremium Pricing:\nMonthly Fee: {{premiumPriceMonth}}\nAnnual Fee: {{premiumPriceYear}}  30% Off\n\nPremium Benefits: Unlimited usage, access to all information modes.",
+  "analysis.realtime": "Realtime",
+  "analysis.longterm": "Longterm",
+  "analysis.intraday": "Intraday",
+  "analysis.others": "Others",
+  "analysis.inputPair": "Please enter the pair you wish to query:",
+  "analysis.invalidInput": "Invalid input, please enter the pair you wish to query:",
+  "analysis.description": "Gather global mainstream exchanges and chain data, understand market maker behavior in one second",
+  "command.start.description": "Gather global mainstream exchanges and chain data, understand market maker behavior in one second",
+  "analysis.emptyPopularity": "Hot Short Orders 🔥",
+  "analysis.multiSinglePopularity": "Hot buy orders 🔥",
+  "analysis.tradeAnalysis": "📊 Currency Analysis",
+  "analysis.tradeAnalysisDescription": "Select the currency you wish to inquire about:  \nIf no data is returned within 15 seconds, it may be that the currency is not listed or the market maker is not present. Please try another currency or try again later."
 }
