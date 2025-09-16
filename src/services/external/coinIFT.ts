@@ -1,4 +1,10 @@
+import type { User } from '@prisma/client'
+import { inject } from 'inversify'
 import { Service } from '../../common/decorators/service.js'
+import { ApiError, ApiErrorCode } from '../../common/errors.js'
+import { prisma } from '../../common/prisma.js'
+import { CONFIG } from '../../constants/config.js'
+import { UserService } from '../user/user.service.js'
 
 export enum WhaleAnalysisType {
   Realtime = 'realtime',
@@ -21,6 +27,12 @@ export class CoinIFTService {
   readonly baseURL = 'https://dev.coinift.net/api/external'
   readonly type = WhaleAnalysisType
 
+  constructor(
+    @inject(UserService)
+    private readonly userService: UserService,
+  ) {
+  }
+
   async getWhaleAnalysis(symbol: string, type: WhaleAnalysisType) {
     const response = await fetch(`${this.baseURL}/whale/analysis`, {
       method: 'POST',
@@ -31,5 +43,24 @@ export class CoinIFTService {
       body: JSON.stringify({ coin_symbol: symbol, trading_type: type }),
     })
     return response.json() as Promise<WhaleAnalysisResponse>
+  }
+
+  async getWhaleAnalysisAndRecord(user: User, symbol: string, type: WhaleAnalysisType) {
+    if (!this.userService.isEnoughCost(user, CONFIG.COST.ANALYSIS)) {
+      throw new ApiError(ApiErrorCode.USER_BALANCE_NOT_ENOUGH, 'User balance not enough')
+    }
+
+    const response = await this.getWhaleAnalysis(symbol, type)
+    const analysisResult = await prisma.userAnalysisResult.create({
+      data: {
+        userId: user.id,
+        symbol,
+        type,
+        result: response.data.message,
+        cost: CONFIG.COST.ANALYSIS,
+      },
+    })
+    await this.userService.updateCoins(user.id, -CONFIG.COST.ANALYSIS)
+    return analysisResult
   }
 }

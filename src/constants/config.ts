@@ -26,6 +26,18 @@ export const CONFIG = {
     INVITE_NEW_USER: 600,
   },
 
+  // 消耗配置
+  COST: {
+    // 用户初始化
+    USER_INIT: 10,
+
+    // 邀请
+    INVITE: 10,
+
+    // 分析消耗
+    ANALYSIS: 1,
+  },
+
   // 支付配置
   PAYMENT: {
     // Stars 汇率配置

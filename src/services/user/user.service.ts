@@ -18,7 +18,10 @@ export class UserService {
 
   async create(data: Prisma.UserCreateInput) {
     const user = await prisma.$transaction(async ($tx) => {
-      const user = await $tx.user.create({ data: UserCreateInputSchema.parse(data) })
+      const user = await $tx.user.create({ data: {
+        coins: CONFIG.COST.USER_INIT,
+        ...UserCreateInputSchema.parse(data),
+      } })
       const [inviteCode] = await this.createInviteCode(user.id, $tx)
 
       return {
@@ -92,6 +95,7 @@ export class UserService {
     const newUser = await prisma.$transaction(async ($tx) => {
       // 创建用户
       const newUser = await $tx.user.create({ data: {
+        coins: CONFIG.COST.INVITE,
         ...UserCreateInputSchema.parse(data),
         InvitedBy: { connect: { id: inviteCode.User.id } },
       } })
@@ -377,5 +381,15 @@ export class UserService {
       },
     })
     return descendants
+  }
+
+  /**
+   * 判断用户是否足够消耗
+   * @param user 用户
+   * @param cost 消耗
+   * @returns 是否足够
+   */
+  isEnoughCost(user: User, cost: number) {
+    return user.coins >= cost
   }
 }

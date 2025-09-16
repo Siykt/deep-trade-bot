@@ -26,7 +26,7 @@ model User {
   /// Telegram 头像
   photoUrl          String?
   /// 用户金币余额
-  coins             Int       @default(200)
+  coins             Int       @default(10)
   /// 是否是会员
   isVip             Boolean   @default(false)
   /// 会员开始时间
@@ -55,9 +55,10 @@ model User {
   updatedAt DateTime @updatedAt
 
   // 关联
-  UsedInviteCodes UserInviteCode[] @relation("UserUsedInviteCode")
-  Order           Order[]
-  UserOrder       UserOrder[]
+  UsedInviteCodes    UserInviteCode[]     @relation("UserUsedInviteCode")
+  Order              Order[]
+  UserOrder          UserOrder[]
+  UserAnalysisResult UserAnalysisResult[]
 }
 
 /// 用户邀请码表
@@ -222,4 +223,23 @@ model TelegramMessageSession {
   id    Int    @id @default(autoincrement())
   key   String @unique
   value String
+}
+
+/// 用户分析结果记录表
+model UserAnalysisResult {
+  id     String @id @default(uuid())
+  /// 符号
+  symbol   String
+  /// 类型
+  type   String
+  /// 结果
+  result String
+  /// 用户ID
+  userId String
+  /// 用户
+  User   User   @relation(fields: [userId], references: [id])
+  /// 消耗
+  cost   Int    @default(0)
+
+  createdAt DateTime @default(now())
 }
