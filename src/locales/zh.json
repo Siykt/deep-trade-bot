@@ -32,5 +32,7 @@
   "product.monthly": "1 个月高级会员",
   "product.yearly": "1 年高级会员",
   "product.monthly.description": "1 个月高级会员/19.9$",
-  "product.yearly.description": "1 年高级会员/169.9$(30%off)"
+  "product.yearly.description": "1 年高级会员/169.9$(30%off)",
+  "balance.usdt": "请在 *{expiresAt}* 前支付 `{amount}` USDT\n\n支付网络：{network}\n支付地址：`{account}`",
+  "balance.usdt.pay": "👛 使用钱包支付"
 }

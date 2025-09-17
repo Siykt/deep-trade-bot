@@ -6,6 +6,7 @@ import { ProductService } from './product/product.service.js'
 import { TGBotService } from './tg/tg-bot.service.js'
 import { TGPaymentService } from './tg/tg-payment.service.js'
 import { UserService } from './user/user.service.js'
+import { UsdtPaymentService } from './web3/usdt-payment.service.js'
 
 export const container = new Container()
 
@@ -19,3 +20,4 @@ export const tgPaymentService = container.get(TGPaymentService)
 export const orderService = container.get(OrderService)
 export const productService = container.get(ProductService)
 export const coinIFTService = container.get(CoinIFTService)
+export const usdtPaymentService = container.get(UsdtPaymentService)

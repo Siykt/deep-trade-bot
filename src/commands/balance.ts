@@ -1,8 +1,10 @@
 import type { TGBotContext, TGBotUser } from '../services/tg/tg-bot.service.js'
 import { UserRejectsError } from '@tonconnect/sdk'
-import { InlineKeyboard } from 'grammy'
+import { InlineKeyboard, InputFile } from 'grammy'
+import QRCode from 'qrcode'
 import { utcNow } from '../common/date.js'
 import logger from '../common/logger.js'
+import { formatMarkdownMessages } from '../common/string.js'
 import { orderService, productService, tgBotService } from '../services/index.js'
 
 function buildBalanceMessage(ctx: TGBotContext, user: TGBotUser) {
@@ -127,6 +129,30 @@ export function defineBalanceCommand() {
           sendTransactionAndReply()
         })
       }
+    })
+
+    range.text('💰 USDT', async (ctx) => {
+      const chatId = ctx.chatId
+      const productId = paymentInfo.productId
+      if (!productId || !chatId) {
+        return
+      }
+
+      const { account, amount, chain, paymentLink, expireAt } = await orderService.createProduceOrderWithUsdt(
+        ctx.session.user,
+        productId,
+        1,
+      )
+      ctx.replyWithPhoto(new InputFile(await QRCode.toBuffer(account, { width: 512 })), {
+        caption: formatMarkdownMessages(ctx.i18n.t('balance.usdt', {
+          account,
+          amount,
+          network: chain.name,
+          expiresAt: utcNow(expireAt).format('YYYY-MM-DD HH:mm:ss'),
+        })),
+        parse_mode: 'MarkdownV2',
+        reply_markup: new InlineKeyboard().url(ctx.i18n.t('balance.usdt.pay'), paymentLink),
+      })
     })
 
     range.row()

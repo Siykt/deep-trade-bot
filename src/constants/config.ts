@@ -20,6 +20,9 @@ export const CONFIG = {
   // TON 支付地址
   PAY_TON_ADDRESS: 'UQA8AuJ7KUuArtwXqaQWm_pII1jmBPGA4Lho3pkk5yvYWHmS',
 
+  // USDT 支付链 ID
+  USDT_PAYMENT_CHAIN_ID: 8453, // base
+
   // 奖励配置
   REWARDS: {
     // 邀请新用户奖励

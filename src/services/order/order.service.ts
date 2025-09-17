@@ -1,6 +1,7 @@
 import type { Order, Prisma, Product, User } from '@prisma/client'
+import type { Chain } from 'viem'
 import EventEmitter from 'node:events'
-import { pMapPool } from '@atp-tools/lib'
+import { amount2bigint, bigint2amount, pMapPool, safeStringify } from '@atp-tools/lib'
 import { toNano } from '@ton/core'
 import { inject } from 'inversify'
 import _ from 'lodash'
@@ -20,6 +21,7 @@ import { TGBotService } from '../tg/tg-bot.service.js'
 import { TGPaymentService } from '../tg/tg-payment.service.js'
 import { UserService } from '../user/user.service.js'
 import { TonWalletService } from '../web3/ton-wallet.service.js'
+import { UsdtPaymentService } from '../web3/usdt-payment.service.js'
 
 /**
  * ```mermaid
@@ -65,6 +67,7 @@ class OrderStatusRelationTree {
 export enum PaymentType {
   TON = 'TON',
   STARS = 'STARS',
+  USDT = 'USDT',
 }
 
 @Service()
@@ -84,6 +87,8 @@ export class OrderService {
     private readonly tgPaymentService: TGPaymentService,
     @inject(TGBotService)
     private readonly tgBotService: TGBotService,
+    @inject(UsdtPaymentService)
+    private readonly usdtPaymentService: UsdtPaymentService,
   ) {
     this.setupTgStarsCheckout()
     this.checkExpiredOrders()
@@ -91,6 +96,7 @@ export class OrderService {
     this.checkTonPaymentTransactions(utcNow().subtract(30, 'day').unix()).catch((error) => {
       logger.error(`Error checking ton payment transactions: ${error}`)
     })
+    this.checkUsdtPaymentTransactions()
     // 每分钟检查一次
     cron.schedule('* * * * *', () => {
       // 非严格过去 1 小时的交易
@@ -178,6 +184,108 @@ export class OrderService {
       await this.tgBotService.api.sendMessage(user.telegramId, `Payment success, Your buy product ${order.UserOrders?.Product.name}`)
       logger.info(`[OrderService] balanceEnd: ${order.id} - ${order.UserOrders?.Product.name}`)
     }, { concurrency: 5 })
+  }
+
+  private watchUsdtPaymentTransactions() {
+    this.usdtPaymentService.watchTransferEvents(async (from, to, value, tx, blockNumber) => {
+      const order = await prisma.order.findFirst({
+        where: {
+          paymentType: PaymentType.USDT,
+          status: OrderStatus.PROCESSING,
+          externalPaymentId: {
+            not: null,
+          },
+          amount: bigint2amount(value, 6),
+          paymentData: {
+            contains: to,
+          },
+        },
+      })
+
+      logger.info(`[OrderService] from: ${from}, to: ${to}, value: ${value}, tx: ${tx}, blockNumber: ${blockNumber}`)
+      if (!order) {
+        return
+      }
+
+      logger.info(`[OrderService] Found ${order.id} order`)
+      const orderPaymentData = JSON.parse(order.paymentData as string)
+
+      await this.updateStatus(order.id, OrderStatus.SUCCESS, {
+        transactionId: tx,
+        paymentData: JSON.stringify({
+          ...orderPaymentData,
+          from,
+          tx,
+          blockNumber,
+        }),
+      })
+    })
+  }
+
+  private async checkUsdtPaymentTransactions() {
+    const orders = await prisma.order.findMany({
+      where: {
+        paymentType: PaymentType.USDT,
+        status: OrderStatus.PROCESSING,
+        paymentData: {
+          not: null,
+        },
+      },
+      orderBy: {
+        createdAt: 'asc',
+      },
+    })
+
+    if (!orders.length) {
+      logger.info(`[OrderService] No orders found`)
+      return
+    }
+
+    logger.info(`[OrderService] Found ${orders.length} orders`)
+
+    // 获取最老一笔订单的支付数据
+    const oldestOrder = orders[0] as Order
+    const oldestOrderPaymentData = JSON.parse(oldestOrder.paymentData as string)
+    const fromBlock = BigInt(oldestOrderPaymentData.blockNumber || 0) || await this.usdtPaymentService.getCurrentBlockNumber(CONFIG.USDT_PAYMENT_CHAIN_ID)
+
+    logger.debug(`[OrderService] fromBlock: ${fromBlock}`)
+
+    const transactions = await this.usdtPaymentService.getTransferEvents(fromBlock, fromBlock + 1000n)
+    logger.info(`[OrderService] Found ${transactions.length} transactions`)
+
+    if (transactions.length === 0) {
+      logger.info(`[OrderService] No transactions found`)
+      return
+    }
+
+    const orderMap = _.keyBy(orders, (order) => {
+      const paymentData = JSON.parse(order.paymentData as string)
+      return (paymentData.account as string).toLowerCase()
+    })
+
+    for (const transaction of transactions) {
+      const order = orderMap[(transaction.args.to as string).toLowerCase()]
+      if (!order) {
+        continue
+      }
+
+      logger.info(`[OrderService] Found ${order.id} order`)
+
+      if (!order.amount.eq(bigint2amount(transaction.args.value || 0n, 6))) {
+        logger.warn(`[OrderService] Order ${order.id} amount changed, need to recalculate amount, orderAmount: ${order.amount}, transactionAmount: ${transaction.args.value}`)
+        continue
+      }
+
+      const orderPaymentData = JSON.parse(order.paymentData as string)
+      await this.updateStatus(order.id, OrderStatus.SUCCESS, {
+        transactionId: transaction.transactionHash,
+        paymentData: safeStringify({
+          ...orderPaymentData,
+          from: transaction.args.from,
+          blockNumber: transaction.blockNumber,
+        }),
+      })
+    }
   }
 
   private async checkExpiredOrders() {
@@ -471,6 +579,103 @@ export class OrderService {
 
     logger.info(`[OrderService] Created Stars order for user [@${user.username}], orderId: ${order.id}`)
     return { order, message }
+  }
+
+  private getUsdtPaymentAccountNextIndex() {
+    const key = 'usdt-payment-account-next-index'
+    return AsyncLock.instance.execute(`usdt-payment-account-index:lock`, async () => {
+      const accountIndex = await prisma.telegramMessageSession.findUnique({
+        where: {
+          key,
+        },
+        select: {
+          value: true,
+        },
+      })
+
+      await prisma.telegramMessageSession.upsert({
+        where: {
+          key,
+        },
+        create: {
+          key,
+          value: '1',
+        },
+        update: {
+          value: (Number(accountIndex?.value) + 1).toString(),
+        },
+      })
+
+      return Number(accountIndex?.value || 0)
+    })
+  }
+
+  async createProduceOrderWithUsdt(user: User, productId: string, quantity: number) {
+    const product = await this.productService.findByIdOrThrow(productId)
+    const fiatAmount = isDev() ? 0.01 : product.price.mul(quantity).toNumber()
+    const amount = fiatAmount
+    const accountIndex = await this.getUsdtPaymentAccountNextIndex()
+    const chain = this.usdtPaymentService.supportChains.get(CONFIG.USDT_PAYMENT_CHAIN_ID) as Chain
+    const account = await this.usdtPaymentService.getAccount(chain.id, accountIndex)
+    const blockNumber = await this.usdtPaymentService.getCurrentBlockNumber(chain.id)
+
+    logger.info(`[OrderService] Creating USDT order for user [${user.username}], product: ${product.name}, quantity: ${quantity}, fiatAmount: $${fiatAmount}, amount: ${amount}USDT, account: ${account.address}, accountIndex: ${accountIndex}`)
+
+    const order = await prisma.$transaction(async (tx) => {
+      const newOrder = await tx.order.create({
+        data: {
+          User: { connect: { id: user.id } },
+          paymentType: PaymentType.USDT,
+          paymentLink: '',
+          amount,
+          fiatAmount,
+          exchangeRate: 1,
+          expireAt: new Date(Date.now() + 3600 * 1000), // 1 hour
+          rateValidSeconds: 3600,
+          customExpiration: 3600,
+          paymentData: safeStringify({
+            account: account.address,
+            accountIndex,
+            amount,
+            chain: chain.id,
+            blockNumber,
+          }),
+        },
+      })
+
+      await tx.userOrder.create({
+        data: {
+          orderId: newOrder.id,
+          productId,
+          userId: user.id,
+          quantity,
+        },
+      })
+
+      return newOrder
+    })
+
+    const paymentLink = this.usdtPaymentService.getPaymentLink({
+      orderId: order.id,
+      amount,
+      address: account.address,
+      chain: chain.id,
+    })
+
+    logger.info(`[OrderService] Created USDT order for user [${user.username}], orderId: ${order.id}, paymentLink: ${paymentLink}`)
+
+    await prisma.order.update({
+      where: { id: order.id },
+      data: { paymentLink },
+    })
+
+    logger.info(`[OrderService] Created USDT order for user [${user.username}], orderId: ${order.id}`)
+    return {
+      ...order,
+      paymentLink,
+      account: account.address,
+      chain,
+    }
   }
 
   /**

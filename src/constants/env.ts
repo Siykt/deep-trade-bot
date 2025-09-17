@@ -26,4 +26,8 @@ export const ENV = {
   // socks proxy
   SOCKS_PROXY_HOST: process.env.SOCKS_PROXY_HOST ?? '',
   SOCKS_PROXY_PORT: process.env.SOCKS_PROXY_PORT ?? '',
+
+  // web3
+  MNEMONIC: process.env.MNEMONIC ?? '',
+  ALCHEMY_API_KEY: process.env.ALCHEMY_API_KEY ?? '',
 }
