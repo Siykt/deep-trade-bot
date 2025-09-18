@@ -64,7 +64,7 @@ function buildWeekMessage(week: {
   return `
 ------- 最近7天: ${week.range} -------
 
-⤷ 生成记录: ${week.recordCount} 次, 消耗: ${week.recordConsume} 💗
+⤷ 生成记录: ${week.recordCount} 次, 消耗: ${week.recordConsume} Cost
 ⤷ 充值记录: ${week.rechargeCount} 次, 金额: $${week.rechargeAmount}
 ⤷ 充值用户: ${week.rechargeUsers} 人
 ⤷ 平均生成次数: ${week.averageRecordCount} 次
@@ -89,7 +89,7 @@ function buildMonthMessage(month: {
   return `
 ------- 最近一个月: ${month.range} -------
 
-⤷ 生成记录: ${month.recordCount} 次, 消耗: ${month.recordConsume} 💗
+⤷ 生成记录: ${month.recordCount} 次, 消耗: ${month.recordConsume} Cost
 ⤷ 充值记录: ${month.rechargeCount} 次, 金额: $${month.rechargeAmount}
 ⤷ 充值用户: ${month.rechargeUsers} 人
 ⤷ 平均生成次数: ${month.averageRecordCount} 次
