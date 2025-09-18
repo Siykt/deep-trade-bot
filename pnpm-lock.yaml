@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@atp-tools/evm':
-        specifier: ^0.12.9
-        version: 0.12.9(hardhat@2.26.3(ts-node@10.9.2(@types/node@18.19.68)(typescript@5.7.2))(typescript@5.7.2))(typescript@5.7.2)(zod@4.0.5)
+        specifier: ^0.13.0
+        version: 0.13.0(hardhat@2.26.3(ts-node@10.9.2(@types/node@18.19.68)(typescript@5.7.2))(typescript@5.7.2))(typescript@5.7.2)(zod@4.0.5)
       '@atp-tools/lib':
         specifier: ^0.15.0
         version: 0.15.0
@@ -211,8 +211,8 @@ packages:
   '@atp-tools/crypto@0.12.8':
     resolution: {integrity: sha512-/k2P78ysRwHeAUN3cx9sB8n3qhraHuMm+H/13APXAH9T3uvO63NAX8yo8H0ICfm1fmoFnj3K3WZs0YpSVKe+ww==}
 
-  '@atp-tools/evm@0.12.9':
-    resolution: {integrity: sha512-SQQsTx214YD354uv5YaazxhTkcWpDbsM8Odgfp1Bn8GJQAEqycZZodYlXLZHmaEa52JB3enUV8aqmMHAtNcXpQ==}
+  '@atp-tools/evm@0.13.0':
+    resolution: {integrity: sha512-BeTRs5ncmAWVoTAw4V+lr+krBR7caGV8HuSgovtvKeWNFNlVgN+YM+fH0mNO/4dQI0nZ3Xj2JHXbjQRSDBEzIg==}
 
   '@atp-tools/lib@0.15.0':
     resolution: {integrity: sha512-uyZARArvOAeabpvI59lwhA/YFQwNSi8FGe8vhQBEhI3r5ecpSo+LwIEWWPB7XdKS0+rICs7u9l/LLX0NSoTnWQ==}
@@ -975,6 +975,10 @@ packages:
   '@noble/curves@1.4.2':
     resolution: {integrity: sha512-TavHr8qycMChk8UwMld0ZDRvatedkzWfH8IiaeGCfymOP5i0hSCozz9vHOL0nkwk7HRMlFnAiKpS2jrUmSybcw==}
 
+  '@noble/curves@1.6.0':
+    resolution: {integrity: sha512-TlaHRXDehJuRNR9TfZDNQ45mMEd5dwUwmicsafcIX4SsNiqnCHKjE/1alYPd/lDRVhxdhUAlv8uEhMCI5zjIJQ==}
+    engines: {node: ^14.21.3 || >=16}
+
   '@noble/curves@1.8.2':
     resolution: {integrity: sha512-vnI7V6lFNe0tLAuJMu+2sX+FcL14TaCWy1qiczg1VwRmPrpQCdq5ESXQMqUc2tluRNf6irBXrWbl1mGN8uaU/g==}
     engines: {node: ^14.21.3 || >=16}
@@ -993,6 +997,10 @@ packages:
   '@noble/hashes@1.4.0':
     resolution: {integrity: sha512-V1JJ1WTRUqHHrOSh597hURcMqVKVGL/ea3kv0gSnEdsEZ0/+VyPghM1lMNGc00z7CIQorSvbKpuJkxvuHbvdbg==}
     engines: {node: '>= 16'}
+
+  '@noble/hashes@1.5.0':
+    resolution: {integrity: sha512-1j6kQFb7QRru7eKN3ZDvRcP13rugwdxZqCjbiAVZfIJwgj2A65UmT4TgARXGlXgnRkORLTDTrO19ZErt7+QXgA==}
+    engines: {node: ^14.21.3 || >=16}
 
   '@noble/hashes@1.7.2':
     resolution: {integrity: sha512-biZ0NUSxyjLLqo6KxEJ1b+C2NAx0wtDoFvCaXHGgUkeHzf3Xc1xKumFKREuT7f7DARNZ/slvYUwFG6B0f2b6hQ==}
@@ -1251,6 +1259,9 @@ packages:
   '@scure/bip32@1.4.0':
     resolution: {integrity: sha512-sVUpc0Vq3tXCkDGYVWGIZTRfnvu8LoTDaev7vbwh0omSvVORONr960MQWdKqJDCReIEmTj3PAr73O3aoxz7OPg==}
 
+  '@scure/bip32@1.5.0':
+    resolution: {integrity: sha512-8EnFYkqEQdnkuGBVpCzKxyIwDCBLDVj3oiX0EKUFre/tOjL/Hqba1D6n/8RcmaQy4f95qQFrO2A8Sr6ybh4NRw==}
+
   '@scure/bip32@1.7.0':
     resolution: {integrity: sha512-E4FFX/N3f4B80AKWp5dP6ow+flD1LQZo/w8UnLGYZO674jS6YnYeepycOOksv+vLPSpgN35wgKgy+ybfTb2SMw==}
 
@@ -1262,6 +1273,9 @@ packages:
 
   '@scure/bip39@1.3.0':
     resolution: {integrity: sha512-disdg7gHuTDZtY+ZdkmLpPCk7fxZSu3gBiEGuoC1XYxv9cGx3Z6cpTggCgW6odSOOIXCiDjuGejW+aJKCY/pIQ==}
+
+  '@scure/bip39@1.4.0':
+    resolution: {integrity: sha512-BEEm6p8IueV/ZTfQLp/0vhw4NPnT9oWf5+28nvmeUICjP99f4vr2d+qc7AVGDDtwRep6ifR43Yed9ERVmiITzw==}
 
   '@scure/bip39@1.6.0':
     resolution: {integrity: sha512-+lF0BbLiJNwVlev4eKelw1WWLaiKXw7sSl8T6FvBlWkdX+94aGJ4o8XjUdlyhTCjd8c+B3KT3JfS8P0bLRNU6A==}
@@ -1445,14 +1459,17 @@ packages:
     resolution: {integrity: sha512-f6UIliwBbRsgVLxIaBANF6w09tYqc6Y/qXdsrbEmXHyFA7ILiKrIwRFXe1yOg8M3cksgVsO9N7yuL2DdCGQKBA==}
     engines: {node: '>=10'}
 
+  '@uniswap/permit2-sdk@1.3.0':
+    resolution: {integrity: sha512-LstYQWP47dwpQrgqBJ+ysFstne9LgI5FGiKHc2ewjj91MTY8Mq1reocu6U/VDncdR5ef30TUOcZ7gPExRY8r6Q==}
+
   '@uniswap/permit2-sdk@1.4.0':
     resolution: {integrity: sha512-l/aGhfhB93M76vXs4eB8QNwhELE6bs66kh7F1cyobaPtINaVpMmlJv+j3KmHeHwAZIsh7QXyYzhDxs07u0Pe4Q==}
 
+  '@uniswap/router-sdk@1.14.3':
+    resolution: {integrity: sha512-dYD0WdPvZoezPkNWGjOrgilnshdKN88ljricaY/9Zyu0FTd9KizdOqcP9wLPLPWXLyFDsVrEQqNHjJWf3ILeJw==}
+
   '@uniswap/router-sdk@1.23.0':
     resolution: {integrity: sha512-KkHoMauTZh2N44sOU0ZuYseNNn9nAvaU57HwyCWjtwZdA7HaXtACfIRJbQvnkNNuALJfzHNkuv2aFyPSjNNmMw==}
-
-  '@uniswap/router-sdk@2.0.4':
-    resolution: {integrity: sha512-MxCtD+g+2pzzd9rZ6HKTdv1ZK2mLjREoDRNAp9+F961zCCVhgJr9L1/6Hour27/xxCyljwmG83Zn1cSS054giw==}
 
   '@uniswap/sdk-core@5.9.0':
     resolution: {integrity: sha512-OME7WR6+5QwQs45A2079r+/FS0zU944+JCQwUX9GyIriCxqw2pGu4F9IEqmlwD+zSIMml0+MJnJJ47pFgSyWDw==}
@@ -1466,8 +1483,8 @@ packages:
     resolution: {integrity: sha512-mh/YNbwKb7Mut96VuEtL+Z5bRe0xVIbjjiryn+iMMrK2sFKhR4duk/86mEz0UO5gSx4pQIw9G5276P5heY/7Rg==}
     engines: {node: '>=10'}
 
-  '@uniswap/universal-router-sdk@4.19.7':
-    resolution: {integrity: sha512-fh7YflU4Crl5WTlaDnyW3heMIOEZdGnYkM/bJ1L7gcWY5n0Y6BgRSnskFIiZw3LDKDBIqkxMPcKytEf9ijaPWQ==}
+  '@uniswap/universal-router-sdk@4.6.1':
+    resolution: {integrity: sha512-HfPYd8xz3/Sjb8if/wAPFOzj0+m7173PVLy+VzF4HrbBwDreU0amYHwf4zQBjffXmys2QtOdwfu7BfZrUwx0kQ==}
     engines: {node: '>=14'}
 
   '@uniswap/universal-router@2.0.0-beta.2':
@@ -1482,6 +1499,10 @@ packages:
     resolution: {integrity: sha512-EtROgWTdhHzw4EUj7SdK9wjppOG7psJ16c656cRuv69nWbD9QyDL2shVcQccEiY7ak9WlJ+bIv/VldybXYBDuw==}
     engines: {node: '>=10'}
 
+  '@uniswap/v2-sdk@4.6.2':
+    resolution: {integrity: sha512-6VrXfbq4XAVTUle4jH9jfKRk2ZaOOClDrL+HPB4jzIVgoKt45hhWjZLkCPxfVahr/OFTAaOTFCIt47Le41PYKw==}
+    engines: {node: '>=10'}
+
   '@uniswap/v3-core@1.0.0':
     resolution: {integrity: sha512-kSC4djMGKMHj7sLMYVnn61k9nu+lHjMIxgg9CDQT+s2QYLoA56GbSK9Oxr+qJXzzygbkrmuY6cwgP6cW2JXPFA==}
     engines: {node: '>=10'}
@@ -1492,6 +1513,10 @@ packages:
 
   '@uniswap/v3-periphery@1.4.4':
     resolution: {integrity: sha512-S4+m+wh8HbWSO3DKk4LwUCPZJTpCugIsHrWR86m/OrUyvSqGDTXKFfc2sMuGXCZrD1ZqO3rhQsKgdWg3Hbb2Kw==}
+    engines: {node: '>=10'}
+
+  '@uniswap/v3-sdk@3.18.1':
+    resolution: {integrity: sha512-TGrKLToSWwfx6VV2d7fh4kwQMlgspXTLE49ep5zfYODVVqV6WhrRdbteHb3e0bjdjxGSj0gzoLmhsjmoJTE1/g==}
     engines: {node: '>=10'}
 
   '@uniswap/v3-sdk@3.25.2':
@@ -1534,6 +1559,17 @@ packages:
 
   '@vue/shared@3.5.13':
     resolution: {integrity: sha512-/hnE/qP5ZoGpol0a5mDi45bOd7t3tjYJBjsgCsivow7D48cJeV5l05RD82lPqi7gRiphZM37rnhW1l6ZoCNNnQ==}
+
+  abitype@1.0.6:
+    resolution: {integrity: sha512-MMSqYh4+C/aVqI2RQaWqbvI4Kxo5cQV40WQ4QFtDnNzCkqChm8MuENhElmynZlO0qUy/ObkEUaXtKqYnx1Kp3A==}
+    peerDependencies:
+      typescript: '>=5.0.4'
+      zod: ^3 >=3.22.0
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+      zod:
+        optional: true
 
   abitype@1.1.0:
     resolution: {integrity: sha512-6Vh4HcRxNMLA0puzPjM5GBgT4aAcFGKZzSgAXvuZ27shJP6NEpielTuqbBmZILR5/xd0PizkBGy5hReKz9jl5A==}
@@ -2548,6 +2584,11 @@ packages:
   isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
 
+  isows@1.0.6:
+    resolution: {integrity: sha512-lPHCayd40oW98/I0uvgaHKWCSvkzY27LjWLbtzOm64yQ+G3Q5npjjbdppU65iZXkK1Zt+kH9pfegli0AYfwYYw==}
+    peerDependencies:
+      ws: '*'
+
   isows@1.0.7:
     resolution: {integrity: sha512-I1fSfDCZL5P0v33sVqeTDSpcstAg/N+wF5HS033mogOVIp4B+oHC7oOCsA3axAbBSGTJ8QubbNmnIRN/h8U7hg==}
     peerDependencies:
@@ -2992,6 +3033,14 @@ packages:
   os-tmpdir@1.0.2:
     resolution: {integrity: sha512-D2FR03Vir7FIu45XBY20mTb+/ZSWB00sjU9jdQXt83gDrI4Ztz5Fs7/yy74g2N5SVQY4xY1qDr4rNddwYRVX0g==}
     engines: {node: '>=0.10.0'}
+
+  ox@0.1.2:
+    resolution: {integrity: sha512-ak/8K0Rtphg9vnRJlbOdaX9R7cmxD2MiSthjWGaQdMk3D7hrAlDoM+6Lxn7hN52Za3vrXfZ7enfke/5WjolDww==}
+    peerDependencies:
+      typescript: '>=5.4.0'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
 
   ox@0.9.3:
     resolution: {integrity: sha512-KzyJP+fPV4uhuuqrTZyok4DC7vFzi7HLUFiUNEmpbyh59htKWkOC98IONC1zgXJPbHAhQgqs6B0Z6StCGhmQvg==}
@@ -3617,6 +3666,14 @@ packages:
   validate-npm-package-license@3.0.4:
     resolution: {integrity: sha512-DpKm2Ui/xN7/HQKCtpZxoRWBhZ9Z0kqtygG8XCgNQ8ZlDnxuQmWhj566j8fN4Cu3/JmbhsDo7fcAJq4s9h27Ew==}
 
+  viem@2.21.53:
+    resolution: {integrity: sha512-0pY8clBacAwzc59iV1vY4a6U4xvRlA5tAuhClJCKvqA6rXJzmNMMvxQ0EG79lkHr7WtBEruXz8nAmONXwnq4EQ==}
+    peerDependencies:
+      typescript: '>=5.0.4'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
   viem@2.37.6:
     resolution: {integrity: sha512-b+1IozQ8TciVQNdQUkOH5xtFR0z7ZxR8pyloENi/a+RA408lv4LoX12ofwoiT3ip0VRhO5ni1em//X0jn/eW0g==}
     peerDependencies:
@@ -3630,6 +3687,9 @@ packages:
     engines: {node: ^14.17.0 || >=16.0.0}
     peerDependencies:
       eslint: '>=6.0.0'
+
+  webauthn-p256@0.0.10:
+    resolution: {integrity: sha512-EeYD+gmIT80YkSIDb2iWq0lq2zbHo1CxHlQTeJ+KkCILWpVy3zASH3ByD4bopzfk0uCwXxLqKGLqp2W4O28VFA==}
 
   webidl-conversions@3.0.1:
     resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
@@ -3858,18 +3918,18 @@ snapshots:
       - debug
       - supports-color
 
-  '@atp-tools/evm@0.12.9(hardhat@2.26.3(ts-node@10.9.2(@types/node@18.19.68)(typescript@5.7.2))(typescript@5.7.2))(typescript@5.7.2)(zod@4.0.5)':
+  '@atp-tools/evm@0.13.0(hardhat@2.26.3(ts-node@10.9.2(@types/node@18.19.68)(typescript@5.7.2))(typescript@5.7.2))(typescript@5.7.2)(zod@4.0.5)':
     dependencies:
       '@atp-tools/crypto': 0.12.8
       '@atp-tools/lib': 0.15.0
       '@aws-crypto/sha256-js': 5.2.0
-      '@uniswap/permit2-sdk': 1.4.0
-      '@uniswap/router-sdk': 1.23.0(hardhat@2.26.3(ts-node@10.9.2(@types/node@18.19.68)(typescript@5.7.2))(typescript@5.7.2))
+      '@uniswap/permit2-sdk': 1.3.0
+      '@uniswap/router-sdk': 1.14.3(hardhat@2.26.3(ts-node@10.9.2(@types/node@18.19.68)(typescript@5.7.2))(typescript@5.7.2))
       '@uniswap/sdk-core': 5.9.0
-      '@uniswap/universal-router-sdk': 4.19.7(hardhat@2.26.3(ts-node@10.9.2(@types/node@18.19.68)(typescript@5.7.2))(typescript@5.7.2))
-      '@uniswap/v2-sdk': 4.15.2
-      '@uniswap/v3-sdk': 3.25.2(hardhat@2.26.3(ts-node@10.9.2(@types/node@18.19.68)(typescript@5.7.2))(typescript@5.7.2))
-      viem: 2.37.6(typescript@5.7.2)(zod@4.0.5)
+      '@uniswap/universal-router-sdk': 4.6.1(hardhat@2.26.3(ts-node@10.9.2(@types/node@18.19.68)(typescript@5.7.2))(typescript@5.7.2))
+      '@uniswap/v2-sdk': 4.6.2
+      '@uniswap/v3-sdk': 3.18.1(hardhat@2.26.3(ts-node@10.9.2(@types/node@18.19.68)(typescript@5.7.2))(typescript@5.7.2))
+      viem: 2.21.53(typescript@5.7.2)(zod@4.0.5)
     transitivePeerDependencies:
       - bufferutil
       - debug
@@ -4641,6 +4701,10 @@ snapshots:
     dependencies:
       '@noble/hashes': 1.4.0
 
+  '@noble/curves@1.6.0':
+    dependencies:
+      '@noble/hashes': 1.5.0
+
   '@noble/curves@1.8.2':
     dependencies:
       '@noble/hashes': 1.7.2
@@ -4656,6 +4720,8 @@ snapshots:
   '@noble/hashes@1.2.0': {}
 
   '@noble/hashes@1.4.0': {}
+
+  '@noble/hashes@1.5.0': {}
 
   '@noble/hashes@1.7.2': {}
 
@@ -4857,6 +4923,12 @@ snapshots:
       '@noble/hashes': 1.4.0
       '@scure/base': 1.1.9
 
+  '@scure/bip32@1.5.0':
+    dependencies:
+      '@noble/curves': 1.6.0
+      '@noble/hashes': 1.5.0
+      '@scure/base': 1.1.9
+
   '@scure/bip32@1.7.0':
     dependencies:
       '@noble/curves': 1.9.1
@@ -4877,6 +4949,11 @@ snapshots:
   '@scure/bip39@1.3.0':
     dependencies:
       '@noble/hashes': 1.4.0
+      '@scure/base': 1.1.9
+
+  '@scure/bip39@1.4.0':
+    dependencies:
+      '@noble/hashes': 1.5.0
       '@scure/base': 1.1.9
 
   '@scure/bip39@1.6.0':
@@ -5130,6 +5207,14 @@ snapshots:
 
   '@uniswap/lib@4.0.1-alpha': {}
 
+  '@uniswap/permit2-sdk@1.3.0':
+    dependencies:
+      ethers: 5.8.0
+      tiny-invariant: 1.3.3
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
   '@uniswap/permit2-sdk@1.4.0':
     dependencies:
       ethers: 5.8.0
@@ -5138,10 +5223,10 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@uniswap/router-sdk@1.23.0(hardhat@2.26.3(ts-node@10.9.2(@types/node@18.19.68)(typescript@5.7.2))(typescript@5.7.2))':
+  '@uniswap/router-sdk@1.14.3(hardhat@2.26.3(ts-node@10.9.2(@types/node@18.19.68)(typescript@5.7.2))(typescript@5.7.2))':
     dependencies:
       '@ethersproject/abi': 5.8.0
-      '@uniswap/sdk-core': 7.7.2
+      '@uniswap/sdk-core': 5.9.0
       '@uniswap/swap-router-contracts': 1.3.1(hardhat@2.26.3(ts-node@10.9.2(@types/node@18.19.68)(typescript@5.7.2))(typescript@5.7.2))
       '@uniswap/v2-sdk': 4.15.2
       '@uniswap/v3-sdk': 3.25.2(hardhat@2.26.3(ts-node@10.9.2(@types/node@18.19.68)(typescript@5.7.2))(typescript@5.7.2))
@@ -5149,7 +5234,7 @@ snapshots:
     transitivePeerDependencies:
       - hardhat
 
-  '@uniswap/router-sdk@2.0.4(hardhat@2.26.3(ts-node@10.9.2(@types/node@18.19.68)(typescript@5.7.2))(typescript@5.7.2))':
+  '@uniswap/router-sdk@1.23.0(hardhat@2.26.3(ts-node@10.9.2(@types/node@18.19.68)(typescript@5.7.2))(typescript@5.7.2))':
     dependencies:
       '@ethersproject/abi': 5.8.0
       '@uniswap/sdk-core': 7.7.2
@@ -5195,12 +5280,12 @@ snapshots:
     transitivePeerDependencies:
       - hardhat
 
-  '@uniswap/universal-router-sdk@4.19.7(hardhat@2.26.3(ts-node@10.9.2(@types/node@18.19.68)(typescript@5.7.2))(typescript@5.7.2))':
+  '@uniswap/universal-router-sdk@4.6.1(hardhat@2.26.3(ts-node@10.9.2(@types/node@18.19.68)(typescript@5.7.2))(typescript@5.7.2))':
     dependencies:
       '@openzeppelin/contracts': 4.7.0
       '@uniswap/permit2-sdk': 1.4.0
-      '@uniswap/router-sdk': 2.0.4(hardhat@2.26.3(ts-node@10.9.2(@types/node@18.19.68)(typescript@5.7.2))(typescript@5.7.2))
-      '@uniswap/sdk-core': 7.7.2
+      '@uniswap/router-sdk': 1.23.0(hardhat@2.26.3(ts-node@10.9.2(@types/node@18.19.68)(typescript@5.7.2))(typescript@5.7.2))
+      '@uniswap/sdk-core': 5.9.0
       '@uniswap/universal-router': 2.0.0-beta.2
       '@uniswap/v2-core': 1.0.1
       '@uniswap/v2-sdk': 4.15.2
@@ -5230,6 +5315,14 @@ snapshots:
       tiny-invariant: 1.3.3
       tiny-warning: 1.0.3
 
+  '@uniswap/v2-sdk@4.6.2':
+    dependencies:
+      '@ethersproject/address': 5.8.0
+      '@ethersproject/solidity': 5.8.0
+      '@uniswap/sdk-core': 5.9.0
+      tiny-invariant: 1.3.3
+      tiny-warning: 1.0.3
+
   '@uniswap/v3-core@1.0.0': {}
 
   '@uniswap/v3-core@1.0.1': {}
@@ -5241,6 +5334,19 @@ snapshots:
       '@uniswap/v2-core': 1.0.1
       '@uniswap/v3-core': 1.0.1
       base64-sol: 1.0.1
+
+  '@uniswap/v3-sdk@3.18.1(hardhat@2.26.3(ts-node@10.9.2(@types/node@18.19.68)(typescript@5.7.2))(typescript@5.7.2))':
+    dependencies:
+      '@ethersproject/abi': 5.8.0
+      '@ethersproject/solidity': 5.8.0
+      '@uniswap/sdk-core': 5.9.0
+      '@uniswap/swap-router-contracts': 1.3.1(hardhat@2.26.3(ts-node@10.9.2(@types/node@18.19.68)(typescript@5.7.2))(typescript@5.7.2))
+      '@uniswap/v3-periphery': 1.4.4
+      '@uniswap/v3-staker': 1.0.0
+      tiny-invariant: 1.3.3
+      tiny-warning: 1.0.3
+    transitivePeerDependencies:
+      - hardhat
 
   '@uniswap/v3-sdk@3.25.2(hardhat@2.26.3(ts-node@10.9.2(@types/node@18.19.68)(typescript@5.7.2))(typescript@5.7.2))':
     dependencies:
@@ -5309,6 +5415,11 @@ snapshots:
       '@vue/shared': 3.5.13
 
   '@vue/shared@3.5.13': {}
+
+  abitype@1.0.6(typescript@5.7.2)(zod@4.0.5):
+    optionalDependencies:
+      typescript: 5.7.2
+      zod: 4.0.5
 
   abitype@1.1.0(typescript@5.7.2)(zod@4.0.5):
     optionalDependencies:
@@ -6466,6 +6577,10 @@ snapshots:
 
   isexe@2.0.0: {}
 
+  isows@1.0.6(ws@8.18.0):
+    dependencies:
+      ws: 8.18.0
+
   isows@1.0.7(ws@8.18.3):
     dependencies:
       ws: 8.18.3
@@ -7072,6 +7187,20 @@ snapshots:
 
   os-tmpdir@1.0.2: {}
 
+  ox@0.1.2(typescript@5.7.2)(zod@4.0.5):
+    dependencies:
+      '@adraffy/ens-normalize': 1.11.0
+      '@noble/curves': 1.9.1
+      '@noble/hashes': 1.8.0
+      '@scure/bip32': 1.7.0
+      '@scure/bip39': 1.6.0
+      abitype: 1.1.0(typescript@5.7.2)(zod@4.0.5)
+      eventemitter3: 5.0.1
+    optionalDependencies:
+      typescript: 5.7.2
+    transitivePeerDependencies:
+      - zod
+
   ox@0.9.3(typescript@5.7.2)(zod@4.0.5):
     dependencies:
       '@adraffy/ens-normalize': 1.11.0
@@ -7676,6 +7805,24 @@ snapshots:
       spdx-correct: 3.2.0
       spdx-expression-parse: 3.0.1
 
+  viem@2.21.53(typescript@5.7.2)(zod@4.0.5):
+    dependencies:
+      '@noble/curves': 1.6.0
+      '@noble/hashes': 1.5.0
+      '@scure/bip32': 1.5.0
+      '@scure/bip39': 1.4.0
+      abitype: 1.0.6(typescript@5.7.2)(zod@4.0.5)
+      isows: 1.0.6(ws@8.18.0)
+      ox: 0.1.2(typescript@5.7.2)(zod@4.0.5)
+      webauthn-p256: 0.0.10
+      ws: 8.18.0
+    optionalDependencies:
+      typescript: 5.7.2
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+      - zod
+
   viem@2.37.6(typescript@5.7.2)(zod@4.0.5):
     dependencies:
       '@noble/curves': 1.9.1
@@ -7705,6 +7852,11 @@ snapshots:
       semver: 7.6.3
     transitivePeerDependencies:
       - supports-color
+
+  webauthn-p256@0.0.10:
+    dependencies:
+      '@noble/curves': 1.9.1
+      '@noble/hashes': 1.8.0
 
   webidl-conversions@3.0.1: {}
 
