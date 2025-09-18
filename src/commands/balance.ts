@@ -11,7 +11,7 @@ function buildBalanceMessage(ctx: TGBotContext, user: TGBotUser) {
   return ctx.i18n.t('balance.message', {
     plan: user.isVip ? ctx.i18n.t('common.premium') : ctx.i18n.t('common.free'),
     expiresAt: user.vipExpireAt ? utcNow(user.vipExpireAt).format('YYYY-MM-DD HH:mm:ss') : '-',
-    remaining: user.coins,
+    remaining: user.isVip ? '∞' : user.coins,
   })
 }
 
