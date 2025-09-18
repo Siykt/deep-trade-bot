@@ -33,4 +33,9 @@ export const ENV = {
 
   // coin_ift
   COIN_IFT_API_URL: process.env.COIN_IFT_API_URL ?? '',
+
+  // chatgpt
+  CHATGPT_BASE_URL: process.env.CHATGPT_BASE_URL,
+  CHATGPT_DEFAULT_MODEL: process.env.CHATGPT_DEFAULT_MODEL ?? '',
+  CHATGPT_API_KEY: process.env.CHATGPT_API_KEY ?? '',
 }

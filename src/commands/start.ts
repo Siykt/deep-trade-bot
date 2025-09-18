@@ -1,7 +1,7 @@
 import type { WhaleAnalysisType } from '../services/external/coinIFT.js'
 import type { TGBotContext } from '../services/tg/tg-bot.service.js'
 import { CONFIG } from '../constants/config.js'
-import { coinIFTService, tgBotService } from '../services/index.js'
+import { chatGPTService, coinIFTService, tgBotService } from '../services/index.js'
 
 async function answerWhaleAnalysis(ctx: TGBotContext, type: WhaleAnalysisType) {
   if (!ctx.session.pair) {
@@ -11,7 +11,15 @@ async function answerWhaleAnalysis(ctx: TGBotContext, type: WhaleAnalysisType) {
 
   ctx.answerCallbackQuery({ text: ctx.i18n.t('analysis.loading') })
   const response = await coinIFTService.getWhaleAnalysisAndRecord(ctx.session.user, ctx.session.pair, type)
-  ctx.reply(response.result)
+
+  if (ctx.session.languageCode !== 'zh') {
+    ctx.reply(
+      await chatGPTService.translate(response.result, 'zh', ctx.session.languageCode as string),
+    )
+  }
+  else {
+    ctx.reply(response.result)
+  }
 }
 
 export function defineStartCommand() {

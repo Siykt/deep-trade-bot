@@ -1,5 +1,6 @@
 import { Container } from 'inversify'
 import { getRegisteredServices } from '../common/decorators/service.js'
+import { ChatGPTService } from './external/chatGPT.js'
 import { CoinIFTService } from './external/coinIFT.js'
 import { OrderService } from './order/order.service.js'
 import { ProductService } from './product/product.service.js'
@@ -21,3 +22,4 @@ export const orderService = container.get(OrderService)
 export const productService = container.get(ProductService)
 export const coinIFTService = container.get(CoinIFTService)
 export const usdtPaymentService = container.get(UsdtPaymentService)
+export const chatGPTService = container.get(ChatGPTService)
