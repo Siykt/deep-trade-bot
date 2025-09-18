@@ -149,6 +149,7 @@ export function defineBalanceCommand() {
         productId,
         1,
         ctx.i18n.t(product.name),
+        ctx.session.languageCode,
       )
       ctx.replyWithPhoto(new InputFile(await QRCode.toBuffer(account, { width: 512 })), {
         caption: formatMarkdownMessages(ctx.i18n.t('balance.usdt', {

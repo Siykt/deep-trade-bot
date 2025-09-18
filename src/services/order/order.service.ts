@@ -634,7 +634,7 @@ export class OrderService {
     })
   }
 
-  async createProduceOrderWithUsdt(user: User, productId: string, quantity: number, title: string) {
+  async createProduceOrderWithUsdt(user: User, productId: string, quantity: number, title: string, languageCode?: string) {
     const product = await this.productService.findByIdOrThrow(productId)
     const fiatAmount = isDev() ? 0.01 : product.price.mul(quantity).toNumber()
     const amount = fiatAmount
@@ -686,6 +686,7 @@ export class OrderService {
       chain: chain.id,
       title,
       qrcodeType: 'address',
+      lang: languageCode,
     })
 
     logger.info(`[OrderService] Created USDT order for user [${user.username}], orderId: ${order.id}, paymentLink: ${paymentLink}`)
