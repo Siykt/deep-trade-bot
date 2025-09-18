@@ -1,11 +1,9 @@
 import type { User } from '@prisma/client'
-import { inject } from 'inversify'
 import { Service } from '../../common/decorators/service.js'
 import { ApiError, ApiErrorCode } from '../../common/errors.js'
 import { prisma } from '../../common/prisma.js'
 import { CONFIG } from '../../constants/config.js'
 import { ENV } from '../../constants/env.js'
-import { UserService } from '../user/user.service.js'
 
 export enum WhaleAnalysisType {
   Realtime = 'realtime',
@@ -27,12 +25,6 @@ export interface WhaleAnalysisResponse {
 export class CoinIFTService {
   readonly baseURL = ENV.COIN_IFT_API_URL
   readonly type = WhaleAnalysisType
-
-  constructor(
-    @inject(UserService)
-    private readonly userService: UserService,
-  ) {
-  }
 
   isEnoughCost(user: User, cost: number) {
     if (user.isVip) {
@@ -69,7 +61,6 @@ export class CoinIFTService {
         cost: CONFIG.COST.ANALYSIS,
       },
     })
-    await this.userService.updateCoins(user.id, -CONFIG.COST.ANALYSIS)
     return analysisResult
   }
 }

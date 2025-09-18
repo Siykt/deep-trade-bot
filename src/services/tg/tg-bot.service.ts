@@ -252,6 +252,36 @@ export class TGBotService extends Bot<TGBotContext, TGBotApi> {
   }
 
   /**
+   * 更新 session 中的用户数据
+   * @param ctx - 上下文
+   * @param newUser - 新的用户数据
+   */
+  updateSessionUser(ctx: TGBotContext, newUser: Partial<TGBotUser>) {
+    this.updateSession(ctx, {
+      user: {
+        ...ctx.session.user,
+        ...newUser,
+      },
+    })
+  }
+
+  /**
+   * 更新 session 中的用户金币
+   * @description 无消耗则不更新，避免频繁访问数据库
+   * @param ctx - 上下文
+   * @param incrementConsume - 消耗的金币
+   */
+  async updateSessionUserCoins(ctx: TGBotContext, incrementConsume: number) {
+    // 无消耗则不更新
+    if (incrementConsume === 0) {
+      return
+    }
+
+    const { coins } = await this.userService.updateCoins(ctx.session.user.id, incrementConsume)
+    this.updateSessionUser(ctx, { coins })
+  }
+
+  /**
    * force update session data when next message is received
    * @param telegramId - user id
    */

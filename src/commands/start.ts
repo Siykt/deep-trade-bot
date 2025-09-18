@@ -11,15 +11,23 @@ async function answerWhaleAnalysis(ctx: TGBotContext, type: WhaleAnalysisType) {
   }
 
   ctx.answerCallbackQuery({ text: ctx.i18n.t('analysis.loading') })
-  const response = await coinIFTService.getWhaleAnalysisAndRecord(ctx.session.user, ctx.session.pair, type)
+  await tgBotService.updateSessionUserCoins(ctx, -CONFIG.COST.ANALYSIS)
 
-  if (ctx.session.languageCode !== 'zh') {
-    ctx.reply(
-      await chatGPTService.translate(response.result, 'zh', ctx.session.languageCode as string),
-    )
+  try {
+    const response = await coinIFTService.getWhaleAnalysisAndRecord(ctx.session.user, ctx.session.pair, type)
+    if (ctx.session.languageCode !== 'zh') {
+      ctx.reply(
+        await chatGPTService.translate(response.result, 'zh', ctx.session.languageCode as string),
+      )
+    }
+    else {
+      ctx.reply(response.result)
+    }
   }
-  else {
-    ctx.reply(response.result)
+  catch (error) {
+    logger.error(`[TgGenerationService] answerWhaleAnalysis: ${error}`)
+    // 退回金币
+    await tgBotService.updateSessionUserCoins(ctx, CONFIG.COST.ANALYSIS)
   }
 }
 
