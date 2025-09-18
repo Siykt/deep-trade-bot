@@ -1,7 +1,8 @@
 import type { WhaleAnalysisType } from '../services/external/coinIFT.js'
 import type { TGBotContext } from '../services/tg/tg-bot.service.js'
+import logger from '../common/logger.js'
 import { CONFIG } from '../constants/config.js'
-import { chatGPTService, coinIFTService, tgBotService } from '../services/index.js'
+import { chatGPTService, coinIFTService, tgBotService, userService } from '../services/index.js'
 
 async function answerWhaleAnalysis(ctx: TGBotContext, type: WhaleAnalysisType) {
   if (!ctx.session.pair) {
@@ -19,6 +20,19 @@ async function answerWhaleAnalysis(ctx: TGBotContext, type: WhaleAnalysisType) {
   }
   else {
     ctx.reply(response.result)
+  }
+}
+
+async function inviteStart(ctx: TGBotContext, code: string) {
+  try {
+    const user = await userService.findByIdOrThrow(ctx.session.user.id)
+    const ancestor = await userService.createInviteRelation(user, code)
+    await userService.updateCoins(ancestor.id, CONFIG.COST.INVITE)
+    tgBotService.forceUpdateSession(ancestor.telegramId)
+    // ctx.api.sendMessage(ancestor.telegramId, `Invite success, you will receive ${CONFIG.COST.INVITE}💗 rewards!`)
+  }
+  catch (error) {
+    logger.error(`[TgGenerationService] inviteStart: ${error}`)
   }
 }
 
@@ -95,6 +109,16 @@ export function defineStartCommand() {
     i18n: true,
     description: 'command.start.description',
     callback: async (ctx) => {
+      const payload = ctx.match?.toString()
+      if (payload) {
+        const { type, params } = tgBotService.parserStartParam<[string]>(payload)
+        switch (type) {
+          case 'i':
+            await inviteStart(ctx, params[0])
+            break
+        }
+      }
+
       ctx.reply(ctx.i18n.t('analysis.description'), { reply_markup: startMenu })
     },
   })
