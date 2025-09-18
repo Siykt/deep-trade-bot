@@ -66,21 +66,21 @@ export function defineStartCommand() {
   })
 
   startMenu.dynamic(async (ctx, startMenu) => {
-    startMenu.text(ctx.i18n.t('analysis.multiSinglePopularity'), async (ctx) => {
-      tgBotService.updateSession(ctx, {
-        state: 'none',
-        pair: 'BTC',
-      })
-      ctx.reply(ctx.i18n.t('analysis.selectType'), { reply_markup: analysisMenu })
-    })
+    // startMenu.text(ctx.i18n.t('analysis.multiSinglePopularity'), async (ctx) => {
+    //   tgBotService.updateSession(ctx, {
+    //     state: 'none',
+    //     pair: 'BTC',
+    //   })
+    //   ctx.reply(ctx.i18n.t('analysis.selectType'), { reply_markup: analysisMenu })
+    // })
 
-    startMenu.text(ctx.i18n.t('analysis.emptyPopularity'), async (ctx) => {
-      tgBotService.updateSession(ctx, {
-        state: 'none',
-        pair: 'BTC',
-      })
-      ctx.reply(ctx.i18n.t('analysis.selectType'), { reply_markup: analysisMenu })
-    }).row()
+    // startMenu.text(ctx.i18n.t('analysis.emptyPopularity'), async (ctx) => {
+    //   tgBotService.updateSession(ctx, {
+    //     state: 'none',
+    //     pair: 'BTC',
+    //   })
+    //   ctx.reply(ctx.i18n.t('analysis.selectType'), { reply_markup: analysisMenu })
+    // }).row()
 
     startMenu.text(ctx.i18n.t('analysis.tradeAnalysis'), async (ctx) => {
       ctx.reply(ctx.i18n.t('analysis.tradeAnalysisDescription'), { reply_markup: searchTradePairMenu })
