@@ -1,3 +1,4 @@
+import { defineAdminCommands } from './admin.js'
 import { defineBalanceCommand } from './balance.js'
 import { defineInvitationCommand } from './invitation.js'
 import { defineLanguageCommand } from './language.js'
@@ -7,3 +8,4 @@ defineBalanceCommand()
 defineInvitationCommand()
 defineLanguageCommand()
 defineStartCommand()
+defineAdminCommands()
