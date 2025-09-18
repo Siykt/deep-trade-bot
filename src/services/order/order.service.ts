@@ -1,7 +1,7 @@
 import type { Order, Prisma, Product, User } from '@prisma/client'
-import type { Chain } from 'viem'
+import type { Address, Chain } from 'viem'
 import EventEmitter from 'node:events'
-import { amount2bigint, bigint2amount, pMapPool, safeStringify } from '@atp-tools/lib'
+import { bigint2amount, pMapPool, safeStringify } from '@atp-tools/lib'
 import { toNano } from '@ton/core'
 import { inject } from 'inversify'
 import _ from 'lodash'
@@ -104,6 +104,7 @@ export class OrderService {
       this.checkTonPaymentTransactions(startUTime).catch((error) => {
         logger.error(`Error checking ton payment transactions: ${error}`)
       })
+      this.checkUsdtPaymentTransactions()
     })
     // 每30分钟检查一次过期订单
     cron.schedule('*/30 * * * *', () => {
@@ -186,7 +187,7 @@ export class OrderService {
     }, { concurrency: 5 })
   }
 
-  private watchUsdtPaymentTransactions() {
+  watchUsdtPaymentTransactions() {
     this.usdtPaymentService.watchTransferEvents(async (from, to, value, tx, blockNumber) => {
       const order = await prisma.order.findFirst({
         where: {
@@ -246,45 +247,60 @@ export class OrderService {
     // 获取最老一笔订单的支付数据
     const oldestOrder = orders[0] as Order
     const oldestOrderPaymentData = JSON.parse(oldestOrder.paymentData as string)
-    const fromBlock = BigInt(oldestOrderPaymentData.blockNumber || 0) || await this.usdtPaymentService.getCurrentBlockNumber(CONFIG.USDT_PAYMENT_CHAIN_ID)
+    const currentBlockNumber = await this.usdtPaymentService.getCurrentBlockNumber(CONFIG.USDT_PAYMENT_CHAIN_ID)
+    let fromBlock = BigInt(oldestOrderPaymentData.blockNumber || 0) || currentBlockNumber
 
     logger.debug(`[OrderService] fromBlock: ${fromBlock}`)
+    const simpleTransactions = new Map<string, { value: bigint, tx: string, blockNumber: bigint, from?: Address }>()
+    while (fromBlock < currentBlockNumber) {
+      const transactions = await this.usdtPaymentService.getTransferEvents(fromBlock, fromBlock += 10000n)
+      for (const transaction of transactions) {
+        if (!transaction.args.to)
+          continue
 
-    const transactions = await this.usdtPaymentService.getTransferEvents(fromBlock, fromBlock + 1000n)
-    logger.info(`[OrderService] Found ${transactions.length} transactions`)
+        // ?重复支付则累加
+        const repeatValue = simpleTransactions.get(transaction.args.to)
+        const value = (repeatValue?.value || 0n) + (transaction.args.value || 0n)
+        if (value) {
+          simpleTransactions.set(transaction.args.to, {
+            value,
+            tx: transaction.transactionHash,
+            blockNumber: transaction.blockNumber,
+            from: transaction.args.from,
+          })
+        }
+      }
+    }
 
-    if (transactions.length === 0) {
+    if (simpleTransactions.size === 0) {
       logger.info(`[OrderService] No transactions found`)
       return
     }
 
-    const orderMap = _.keyBy(orders, (order) => {
+    logger.info(`[OrderService] Found ${simpleTransactions.size} transactions`)
+
+    for (const order of orders) {
       const paymentData = JSON.parse(order.paymentData as string)
-      return (paymentData.account as string).toLowerCase()
-    })
+      const transaction = simpleTransactions.get(paymentData.account as string)
 
-    for (const transaction of transactions) {
-      const order = orderMap[(transaction.args.to as string).toLowerCase()]
-      if (!order) {
+      if (!transaction) {
         continue
       }
 
-      logger.info(`[OrderService] Found ${order.id} order`)
-
-      if (!order.amount.eq(bigint2amount(transaction.args.value || 0n, 6))) {
-        logger.warn(`[OrderService] Order ${order.id} amount changed, need to recalculate amount, orderAmount: ${order.amount}, transactionAmount: ${transaction.args.value}`)
-        continue
+      if (order.amount.eq(bigint2amount(transaction.value, 6))) {
+        await this.updateStatus(order.id, OrderStatus.SUCCESS, {
+          transactionId: transaction.tx,
+          paymentData: JSON.stringify({
+            ...paymentData,
+            from: transaction.from,
+            tx: transaction.tx,
+            blockNumber: transaction.blockNumber,
+          }),
+        })
       }
-
-      const orderPaymentData = JSON.parse(order.paymentData as string)
-      await this.updateStatus(order.id, OrderStatus.SUCCESS, {
-        transactionId: transaction.transactionHash,
-        paymentData: safeStringify({
-          ...orderPaymentData,
-          from: transaction.args.from,
-          blockNumber: transaction.blockNumber,
-        }),
-      })
+      else {
+        logger.warn(`[OrderService] Order ${order.id} amount changed, need to recalculate amount, orderAmount: ${order.amount}, transactionAmount: ${transaction.value}`)
+      }
     }
   }
 
@@ -610,7 +626,7 @@ export class OrderService {
     })
   }
 
-  async createProduceOrderWithUsdt(user: User, productId: string, quantity: number) {
+  async createProduceOrderWithUsdt(user: User, productId: string, quantity: number, title: string) {
     const product = await this.productService.findByIdOrThrow(productId)
     const fiatAmount = isDev() ? 0.01 : product.price.mul(quantity).toNumber()
     const amount = fiatAmount
@@ -658,8 +674,10 @@ export class OrderService {
     const paymentLink = this.usdtPaymentService.getPaymentLink({
       orderId: order.id,
       amount,
-      address: account.address,
+      to: account.address,
       chain: chain.id,
+      title,
+      qrcodeType: 'address',
     })
 
     logger.info(`[OrderService] Created USDT order for user [${user.username}], orderId: ${order.id}, paymentLink: ${paymentLink}`)

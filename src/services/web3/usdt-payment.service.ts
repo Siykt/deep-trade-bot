@@ -7,7 +7,7 @@ import { HDKey } from '@scure/bip32'
 import { mnemonicToSeed } from '@scure/bip39'
 import { parseAbi } from 'viem'
 import { generatePrivateKey, privateKeyToAccount } from 'viem/accounts'
-import { arbitrum, base, gnosis, mainnet, optimism, polygon } from 'viem/chains'
+import { arbitrum, base, bsc, gnosis, mainnet, optimism } from 'viem/chains'
 import { Service } from '../../common/decorators/service.js'
 import { isDev } from '../../common/is.js'
 import { ENV } from '../../constants/env.js'
@@ -19,8 +19,10 @@ const ERC20_ABI = parseAbi([
 export interface FullChainUSDTPaymentLinkParams {
   orderId: string
   amount: number
-  address: Address
+  to: Address
   chain: number
+  qrcodeType?: 'address' | 'eip681'
+  title: string
 }
 
 @Service()
@@ -33,7 +35,7 @@ export class UsdtPaymentService {
 
   readonly supportChains = new Map<number, Chain>([
     [mainnet.id, mainnet],
-    [polygon.id, polygon],
+    [bsc.id, bsc],
     [base.id, base],
     [optimism.id, optimism],
     [arbitrum.id, arbitrum],
@@ -56,8 +58,15 @@ export class UsdtPaymentService {
   }
 
   getPaymentLink(fullChainUSDTPaymentLinkParams: FullChainUSDTPaymentLinkParams) {
-    const { chain, address, amount, orderId } = fullChainUSDTPaymentLinkParams
-    return `https://fullchain-usdt-pay-fe.pages.dev/?orderId=${orderId}&amount=${amount}&address=${address}&chain=${chain}`
+    const { chain, to, amount, orderId, qrcodeType, title } = fullChainUSDTPaymentLinkParams
+    const url = new URL('https://fullchain-usdt-pay-fe.pages.dev/')
+    url.searchParams.set('orderId', orderId)
+    url.searchParams.set('amount', amount.toString())
+    url.searchParams.set('to', to)
+    url.searchParams.set('chain', chain.toString())
+    url.searchParams.set('qrcodeType', qrcodeType || 'address')
+    url.searchParams.set('title', title)
+    return url.toString()
   }
 
   getCurrentBlockNumber(chainId: number) {

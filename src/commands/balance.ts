@@ -138,10 +138,16 @@ export function defineBalanceCommand() {
         return
       }
 
+      const product = products.find(product => product.id === productId)
+      if (!product) {
+        return
+      }
+
       const { account, amount, chain, paymentLink, expireAt } = await orderService.createProduceOrderWithUsdt(
         ctx.session.user,
         productId,
         1,
+        ctx.i18n.t(product.name),
       )
       ctx.replyWithPhoto(new InputFile(await QRCode.toBuffer(account, { width: 512 })), {
         caption: formatMarkdownMessages(ctx.i18n.t('balance.usdt', {
