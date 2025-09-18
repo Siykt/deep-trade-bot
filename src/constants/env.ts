@@ -30,4 +30,7 @@ export const ENV = {
   // web3
   MNEMONIC: process.env.MNEMONIC ?? '',
   ALCHEMY_API_KEY: process.env.ALCHEMY_API_KEY ?? '',
+
+  // coin_ift
+  COIN_IFT_API_URL: process.env.COIN_IFT_API_URL ?? '',
 }

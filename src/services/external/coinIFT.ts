@@ -4,6 +4,7 @@ import { Service } from '../../common/decorators/service.js'
 import { ApiError, ApiErrorCode } from '../../common/errors.js'
 import { prisma } from '../../common/prisma.js'
 import { CONFIG } from '../../constants/config.js'
+import { ENV } from '../../constants/env.js'
 import { UserService } from '../user/user.service.js'
 
 export enum WhaleAnalysisType {
@@ -24,7 +25,7 @@ export interface WhaleAnalysisResponse {
 
 @Service()
 export class CoinIFTService {
-  readonly baseURL = 'https://dev.coinift.net/api/external'
+  readonly baseURL = ENV.COIN_IFT_API_URL
   readonly type = WhaleAnalysisType
 
   constructor(
