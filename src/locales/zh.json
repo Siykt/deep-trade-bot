@@ -1,5 +1,5 @@
 {
-  "balance.message": "📦 您的套餐状态：{plan}  \n⏰ 到期日期：{expiresAt}  \n🔥 升级即可解锁全部功能，享受无限使用权限！🔓",
+  "balance.message": "📦 您的套餐状态：{plan}  \n🔄 剩余使用次数: {remaining}  \n⏰ 到期日期：{expiresAt}  \n🔥 升级即可解锁全部功能，享受无限使用权限！🔓",
   "analysis.selectType": "选择你要查询{pair}的交易类型：\n\n ⚡实时查询：清晰当下庄家行为，方便布局交易\n📊日内交易：分析当日庄家行为，适合短线操作\n📈长期持有：分析长期趋势，适合价值投资",
   "analysis.loading": "正在为您查询......",
   "analysis.realtime": "实时查询",
