@@ -1,4 +1,4 @@
-name: Deploy to Server
+name: Deploy to deep-trade-bot Server
 
 on:
   push:
@@ -12,7 +12,7 @@ permissions:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  DEPLOY_PATH: /opt/servers/short-video-bot
+  DEPLOY_PATH: /opt/servers/deep-trade-bot
 
 jobs:
   build-push-deploy:
@@ -35,7 +35,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Get short SHA
+      - name: Get deep-trade-bot SHA
         run: echo "SHA7=${GITHUB_SHA::7}" >> $GITHUB_ENV
 
       - name: Set repository name lowercase
@@ -71,17 +71,17 @@ jobs:
             echo "Logging in to GitHub Container Registry..."
             echo "${{ secrets.GITHUB_TOKEN }}" | sudo docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
             echo "Creating database volume..."
-            sudo docker volume create kiss-lust-db || true
+            sudo docker volume create deep-trade-bot-db || true
             echo "Pulling latest image..."
             sudo docker pull ${{ env.REGISTRY }}/${{ env.REPO_LC }}:sha-${{ env.SHA7 }}
             echo "Stopping old container..."
-            sudo docker stop kiss-lust || true
-            sudo docker rm kiss-lust || true
+            sudo docker stop deep-trade-bot || true
+            sudo docker rm deep-trade-bot || true
             echo "Starting new container..."
             sudo docker run -d \
-              --name kiss-lust \
+              --name deep-trade-bot \
               --restart unless-stopped \
-              -v kiss-lust-db:/app/database \
+              -v deep-trade-bot-db:/app/database \
               -e TELEGRAM_BOT_TOKEN="${{ secrets.TELEGRAM_BOT_TOKEN }}" \
               -e SERVER_AUTH_PASSWORD="${{ secrets.SERVER_AUTH_PASSWORD }}" \
               -e MNEMONIC="${{ secrets.MNEMONIC }}" \
@@ -97,5 +97,5 @@ jobs:
             echo "Waiting for service to start..."
             sleep 5
             echo "Checking container status..."
-            sudo docker ps | grep kiss-lust || (echo "Container failed to start" && exit 1)
+            sudo docker ps | grep deep-trade-bot || (echo "Container failed to start" && exit 1)
             echo "Deployment completed"
