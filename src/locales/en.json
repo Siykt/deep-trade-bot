@@ -32,5 +32,7 @@
   "product.monthly": "1 Month Premium",
   "product.yearly": "1 Year Premium",
   "product.monthly.description": "1 Month Premium/19.9$",
-  "product.yearly.description": "1 Year Premium/169.9$(30%off)"
+  "product.yearly.description": "1 Year Premium/169.9$(30%off)",
+  "balance.usdt": "Please pay `{amount}` USDT before *{expiresAt}*.\n\nPayment Network: {network}\nPayment Address: `{account}`",
+  "balance.usdt.pay": "👛 Pay with wallet"
 }

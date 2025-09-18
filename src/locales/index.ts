@@ -1,5 +1,6 @@
 import i18next from 'i18next'
 import en from './en.json' with { type: 'json' }
+import ru from './ru.json' with { type: 'json' }
 import zh from './zh.json' with { type: 'json' }
 
 const i18n = i18next
@@ -14,6 +15,11 @@ export const languages = [
     code: 'en',
     name: 'English',
     file: en,
+  },
+  {
+    code: 'ru',
+    name: 'Russian',
+    file: ru,
   },
 ] as const
 

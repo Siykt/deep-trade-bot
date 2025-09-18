@@ -1,3 +1,4 @@
+import { languages } from '../locales/index.js'
 import { tgBotService } from '../services/index.js'
 
 export function defineLanguageCommand() {
@@ -5,15 +6,10 @@ export function defineLanguageCommand() {
     autoAnswer: false,
   })
 
-  languageMenu.dynamic(async (ctx, languageMenu) => {
-    languageMenu.text(ctx.i18n.t('language.zh'), async (ctx) => {
-      tgBotService.updateSession(ctx, { languageCode: 'zh' })
-      ctx.i18n.changeLanguage('zh')
-      ctx.answerCallbackQuery({ text: ctx.i18n.t('language.updated') })
-    })
-    languageMenu.text(ctx.i18n.t('language.en'), async (ctx) => {
-      tgBotService.updateSession(ctx, { languageCode: 'en' })
-      ctx.i18n.changeLanguage('en')
+  languages.forEach((language) => {
+    languageMenu.text(language.name, async (ctx) => {
+      tgBotService.updateSession(ctx, { languageCode: language.code })
+      ctx.i18n.changeLanguage(language.code)
       ctx.answerCallbackQuery({ text: ctx.i18n.t('language.updated') })
     })
   })
