@@ -1,7 +1,7 @@
 import type { Order, Prisma, Product, User } from '@prisma/client'
 import type { Address, Chain } from 'viem'
 import EventEmitter from 'node:events'
-import { bigint2amount, pMapPool, safeStringify } from '@atp-tools/lib'
+import { bigint2amount, pMapPool, safeStringify, sleep } from '@atp-tools/lib'
 import { toNano } from '@ton/core'
 import { inject } from 'inversify'
 import _ from 'lodash'
@@ -97,15 +97,20 @@ export class OrderService {
       logger.error(`Error checking ton payment transactions: ${error}`)
     })
     this.checkUsdtPaymentTransactions()
-    // 每分钟检查一次
+    // 每分钟检查一次 Ton 链支付
     cron.schedule('* * * * *', () => {
       // 非严格过去 1 小时的交易
       const startUTime = utcNow().startOf('h').subtract(1, 'h').unix()
       this.checkTonPaymentTransactions(startUTime).catch((error) => {
         logger.error(`Error checking ton payment transactions: ${error}`)
       })
+    })
+
+    // 每2分钟检查一次 Usdt 链支付
+    cron.schedule('*/2 * * * *', () => {
       this.checkUsdtPaymentTransactions()
     })
+
     // 每30分钟检查一次过期订单
     cron.schedule('*/30 * * * *', () => {
       this.checkExpiredOrders().catch((error) => {
@@ -270,6 +275,9 @@ export class OrderService {
           })
         }
       }
+
+      // 避免429
+      await sleep(1000)
     }
 
     if (simpleTransactions.size === 0) {
