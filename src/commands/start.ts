@@ -11,7 +11,9 @@ async function answerWhaleAnalysis(ctx: TGBotContext, type: WhaleAnalysisType) {
   }
 
   ctx.answerCallbackQuery({ text: ctx.i18n.t('analysis.loading') })
-  await tgBotService.updateSessionUserCoins(ctx, -CONFIG.COST.ANALYSIS)
+  if (!ctx.session.user.isVip) {
+    await tgBotService.updateSessionUserCoins(ctx, -CONFIG.COST.ANALYSIS)
+  }
 
   try {
     const response = await coinIFTService.getWhaleAnalysisAndRecord(ctx.session.user, ctx.session.pair, type)
@@ -27,7 +29,9 @@ async function answerWhaleAnalysis(ctx: TGBotContext, type: WhaleAnalysisType) {
   catch (error) {
     logger.error(`[TgGenerationService] answerWhaleAnalysis: ${error}`)
     // 退回金币
-    await tgBotService.updateSessionUserCoins(ctx, CONFIG.COST.ANALYSIS)
+    if (!ctx.session.user.isVip) {
+      await tgBotService.updateSessionUserCoins(ctx, CONFIG.COST.ANALYSIS)
+    }
   }
 }
 
