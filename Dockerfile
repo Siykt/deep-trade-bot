@@ -28,7 +28,6 @@ COPY --from=builder /app/package.json /app/package.json
 COPY --from=builder /app/pnpm-lock.yaml /app/pnpm-lock.yaml
 COPY --from=builder /app/prisma /app/prisma
 COPY --from=builder /app/docs /app/docs
-COPY --from=builder /app/src/services/comfy-ui/workflows /app/dist/workflows
 COPY ./scripts/start.sh /app/start.sh
 
 # 复制构建产物
