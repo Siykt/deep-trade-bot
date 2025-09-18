@@ -89,6 +89,10 @@ jobs:
               -e LOGGER_DIR_PATH="/app/logs" \
               -e DATABASE_URL="file:/app/database/database.db" \
               -e ALCHEMY_API_KEY="${{ secrets.ALCHEMY_API_KEY }}" \
+              -e COIN_IFT_API_URL="${{ secrets.COIN_IFT_API_URL }}" \
+              -e CHATGPT_BASE_URL="${{ secrets.CHATGPT_BASE_URL }}" \
+              -e CHATGPT_DEFAULT_MODEL="${{ secrets.CHATGPT_DEFAULT_MODEL }}" \
+              -e CHATGPT_API_KEY="${{ secrets.CHATGPT_API_KEY }}" \
               ${{ env.REGISTRY }}/${{ env.REPO_LC }}:sha-${{ env.SHA7 }}
             echo "Waiting for service to start..."
             sleep 5
