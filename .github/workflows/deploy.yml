@@ -84,17 +84,11 @@ jobs:
               -v kiss-lust-db:/app/database \
               -e TELEGRAM_BOT_TOKEN="${{ secrets.TELEGRAM_BOT_TOKEN }}" \
               -e SERVER_AUTH_PASSWORD="${{ secrets.SERVER_AUTH_PASSWORD }}" \
-              -e COMFY_UI_API_URL="${{ secrets.COMFY_UI_API_URL }}" \
-              -e COMFY_UI_WS_URL="${{ secrets.COMFY_UI_WS_URL }}" \
-              -e COMFY_UI_DEPLOYMENT_NAME="${{ secrets.COMFY_UI_DEPLOYMENT_NAME }}" \
+              -e MNEMONIC="${{ secrets.MNEMONIC }}" \
               -e TON_CENTER_API_KEY="${{ secrets.TON_CENTER_API_KEY }}" \
               -e LOGGER_DIR_PATH="/app/logs" \
               -e DATABASE_URL="file:/app/database/database.db" \
-              -e K8S_AUTOSCALE_ENABLED="${{ secrets.K8S_AUTOSCALE_ENABLED }}" \
-              -e K8S_NAMESPACE="${{ secrets.K8S_NAMESPACE }}" \
-              -e K8S_KUBECONFIG_BASE64="${{ secrets.K8S_KUBECONFIG_BASE64 }}" \
-              -e K8S_KUBECONFIG_PATH="${{ secrets.K8S_KUBECONFIG_PATH }}" \
-              -e K8S_CONTEXT="${{ secrets.K8S_CONTEXT }}" \
+              -e ALCHEMY_API_KEY="${{ secrets.ALCHEMY_API_KEY }}" \
               ${{ env.REGISTRY }}/${{ env.REPO_LC }}:sha-${{ env.SHA7 }}
             echo "Waiting for service to start..."
             sleep 5
