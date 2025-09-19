@@ -219,6 +219,7 @@ export class TGBotService extends Bot<TGBotContext, TGBotApi> {
 
     await this.api.setMyCommands(normalCommands.map(({ command, description }) => ({ command, description })))
     languages.forEach((language) => {
+      i18n.changeLanguage(language.code)
       this.api.setMyCommands(i18nCommands.map(({ command, description, i18nData }) => ({ command, description: i18n.t(description, i18nData?.() ?? {}) })), { language_code: language.code })
     })
   }
