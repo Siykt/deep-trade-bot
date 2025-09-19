@@ -100,7 +100,7 @@ export function defineStartCommand() {
         state: 'searchTradePair',
         analysisResult: '',
       })
-      ctx.editMessageText(ctx.i18n.t('analysis.inputPair'))
+      ctx.reply(ctx.i18n.t('analysis.inputPair'))
     })
   })
 
