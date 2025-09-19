@@ -150,8 +150,8 @@ export class TGBotService extends Bot<TGBotContext, TGBotApi> {
       }
 
       const i18n = i18next.cloneInstance({ initAsync: false, initImmediate: false })
-      const language = ctx.from?.language_code ?? i18n.language
-      const languageCode = (language === 'zh-hans' || language === 'zh') ? 'zh' : 'en'
+      const language = ctx.from?.language_code ?? 'en' // 默认英语
+      const languageCode = (language === 'zh-hans' || language === 'zh') ? 'zh' : language
 
       if (!canVisitSession) {
         ctx.i18n = i18n
@@ -159,9 +159,11 @@ export class TGBotService extends Bot<TGBotContext, TGBotApi> {
         return next()
       }
 
-      this.updateSession(ctx, { languageCode: ctx.session.languageCode ?? languageCode })
+      if (ctx.session.languageCode !== languageCode) {
+        logger.debug(`[TGBotService] languageCode: ${languageCode}`)
+        this.updateSession(ctx, { languageCode: ctx.session.languageCode ?? languageCode })
+      }
 
-      logger.debug(`[TGBotService] languageCode: ${languageCode}`)
       if (ctx.session?.languageCode && ctx.session.languageCode !== languageCode) {
         i18n.changeLanguage(ctx.session.languageCode)
         logger.debug(`[TGBotService] languageCode changed: ${ctx.session.languageCode}`)
