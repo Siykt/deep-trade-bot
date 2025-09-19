@@ -35,7 +35,7 @@ export const CONFIG = {
     USER_INIT: 10,
 
     // 邀请
-    INVITE: 10,
+    INVITE: 5,
 
     // 分析消耗
     ANALYSIS: 1,

@@ -1,5 +1,6 @@
 import type { TGBotContext } from '../services/tg/tg-bot.service.js'
 import { formatMarkdownMessages } from '../common/string.js'
+import { CONFIG } from '../constants/config.js'
 import { tgBotService, userService } from '../services/index.js'
 
 async function buildInviteText(ctx: TGBotContext) {
@@ -9,6 +10,7 @@ async function buildInviteText(ctx: TGBotContext) {
     botName: tgBotService.botInfo.username,
     link,
     count: ancestors.length,
+    cost: CONFIG.COST.INVITE,
   }))
 }
 

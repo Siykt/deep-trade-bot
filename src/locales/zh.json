@@ -15,7 +15,7 @@
   "analysis.tradeAnalysisDescription": "选择你要查询的币种：\n15秒内未返回数据，可能该币未收录或庄家不在场，请尝试其他币种或稍后再试",
   "command.start.description": "汇集全球主流交易所及链上数据, 一秒看懂庄家行为",
   "invitation.description": "🔥 邀请你的好友加入 {botName}",
-  "invitation.message": "🚀 欢迎加入 {botName} 的邀请联盟！🎁\n每成功邀请一位好友，即可获得 *5 次免费*投资预测机会！💰\n这是您的专属邀请链接：\n👉 `{link}`\n已邀请人数：{count} 📊",
+  "invitation.message": "🚀 欢迎加入 {botName} 的邀请联盟！🎁\n每成功邀请一位好友，即可获得 *{cost} 次免费*投资预测机会！💰\n这是您的专属邀请链接：\n👉 `{link}`\n已邀请人数：{count} 📊",
   "common.free": "免费会员",
   "common.premium": "高级会员",
   "language.description": "更改你的语言",
