@@ -1,5 +1,6 @@
 import type { User } from '@prisma/client'
 import { Service } from '../../common/decorators/service.js'
+import logger from '../../common/logger.js'
 import { prisma } from '../../common/prisma.js'
 import { CONFIG } from '../../constants/config.js'
 import { ENV } from '../../constants/env.js'
@@ -46,6 +47,7 @@ export class CoinIFTService {
   }
 
   async getWhaleAnalysisAndRecord(user: User, symbol: string, type: WhaleAnalysisType) {
+    logger.info(`[CoinIFTService] getWhaleAnalysisAndRecord: ${symbol} ${type}`)
     const response = await this.getWhaleAnalysis(symbol, type)
     const analysisResult = await prisma.userAnalysisResult.create({
       data: {
