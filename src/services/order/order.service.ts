@@ -123,7 +123,7 @@ export class OrderService {
     const transactions = await this.tonWalletService.getTransactions([CONFIG.PAY_TON_ADDRESS], startUTime)
 
     if (!transactions || transactions.length === 0) {
-      logger.info(`[OrderService] No transactions found`)
+      logger.info(`[OrderService] No TON transactions found`)
       return
     }
     else if (transactions.length === 1000) {
@@ -160,11 +160,11 @@ export class OrderService {
     })
 
     if (!orders.length) {
-      logger.info(`[OrderService] No orders found`)
+      logger.info(`[OrderService] No TON orders found`)
       return
     }
 
-    logger.info(`[OrderService] Found ${orders.length} orders`)
+    logger.info(`[OrderService] Found ${orders.length} TON orders`)
     const orderTransactionMap = _.keyBy(hasCommentTransactions, 'comment')
 
     await pMapPool(orders, async (order) => {
@@ -243,11 +243,11 @@ export class OrderService {
     })
 
     if (!orders.length) {
-      logger.info(`[OrderService] No orders found`)
+      logger.info(`[OrderService] No USDT orders found`)
       return
     }
 
-    logger.info(`[OrderService] Found ${orders.length} orders`)
+    logger.info(`[OrderService] Found ${orders.length} USDT orders`)
 
     // 获取最老一笔订单的支付数据
     const oldestOrder = orders[0] as Order
@@ -281,7 +281,7 @@ export class OrderService {
     }
 
     if (simpleTransactions.size === 0) {
-      logger.info(`[OrderService] No transactions found`)
+      logger.info(`[OrderService] No USDT transactions found`)
       return
     }
 
