@@ -33,6 +33,9 @@ async function answerWhaleAnalysis(ctx: TGBotContext, type: WhaleAnalysisType) {
     let { result } = await coinIFTService.getWhaleAnalysisAndRecord(ctx.session.user, ctx.session.pair, type)
     if (ctx.session.languageCode !== 'zh') {
       result = await chatGPTService.translate(result, 'zh', ctx.session.languageCode as string)
+
+      // 将en中的Market Maker替换成Whale，不区分大小写
+      result = result.replace(/market maker/gi, 'Whale')
     }
 
     result = `${ctx.i18n.t(`analysis.result.${type}`)}\n\n${result}`
