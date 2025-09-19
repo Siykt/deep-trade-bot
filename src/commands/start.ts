@@ -4,9 +4,23 @@ import logger from '../common/logger.js'
 import { CONFIG } from '../constants/config.js'
 import { chatGPTService, coinIFTService, tgBotService, userService } from '../services/index.js'
 
+const startMenu = tgBotService.createMenu('start')
+const searchTradePairMenu = tgBotService.createMenu('searchTradePair')
+const analysisMenu = tgBotService.createMenu('analysis', {
+  autoAnswer: false,
+})
+const analysisResultMenu = tgBotService.createMenu('analysisResult')
+const notEnoughBalanceMenu = tgBotService.createMenu('notEnoughBalance')
+
 async function answerWhaleAnalysis(ctx: TGBotContext, type: WhaleAnalysisType) {
   if (!ctx.session.pair) {
     ctx.answerCallbackQuery({ text: ctx.i18n.t('analysis.invalidInput') })
+    return
+  }
+
+  if (!coinIFTService.isEnoughCost(ctx.session.user)) {
+    ctx.answerCallbackQuery({ text: ctx.i18n.t('analysis.balanceNotEnoughTip') })
+    ctx.reply(ctx.i18n.t('analysis.balanceNotEnough'), { reply_markup: notEnoughBalanceMenu })
     return
   }
 
@@ -16,15 +30,15 @@ async function answerWhaleAnalysis(ctx: TGBotContext, type: WhaleAnalysisType) {
   }
 
   try {
-    const response = await coinIFTService.getWhaleAnalysisAndRecord(ctx.session.user, ctx.session.pair, type)
+    let { result } = await coinIFTService.getWhaleAnalysisAndRecord(ctx.session.user, ctx.session.pair, type)
     if (ctx.session.languageCode !== 'zh') {
-      ctx.reply(
-        await chatGPTService.translate(response.result, 'zh', ctx.session.languageCode as string),
-      )
+      result = await chatGPTService.translate(result, 'zh', ctx.session.languageCode as string)
     }
-    else {
-      ctx.reply(response.result)
-    }
+
+    result = `${ctx.i18n.t(`analysis.result.${type}`)}\n\n${result}`
+    logger.info(`analysisResult: ${result}`)
+    tgBotService.updateSession(ctx, { analysisResult: result })
+    ctx.editMessageText(result, { reply_markup: analysisResultMenu })
   }
   catch (error) {
     logger.error(`[TgGenerationService] answerWhaleAnalysis: ${error}`)
@@ -49,12 +63,6 @@ async function inviteStart(ctx: TGBotContext, code: string) {
 }
 
 export function defineStartCommand() {
-  const startMenu = tgBotService.createMenu('start')
-  const searchTradePairMenu = tgBotService.createMenu('searchTradePair')
-  const analysisMenu = tgBotService.createMenu('analysis', {
-    autoAnswer: false,
-  })
-
   analysisMenu.dynamic(async (ctx, analysisMenu) => {
     analysisMenu.text(ctx.i18n.t('analysis.realtime'), async (ctx) => {
       await answerWhaleAnalysis(ctx, coinIFTService.type.Realtime)
@@ -74,8 +82,9 @@ export function defineStartCommand() {
       tgBotService.updateSession(ctx, {
         state: 'none',
         pair: key,
+        analysisResult: '',
       })
-      ctx.reply(ctx.i18n.t('analysis.selectType', { pair: key }), { reply_markup: analysisMenu })
+      ctx.editMessageText(ctx.i18n.t('analysis.selectType', { pair: key }), { reply_markup: analysisMenu })
     })
     if (i % 2) {
       searchTradePairMenu.row()
@@ -86,8 +95,9 @@ export function defineStartCommand() {
     searchTradePairMenu.text(ctx.i18n.t('analysis.others'), async (ctx) => {
       tgBotService.updateSession(ctx, {
         state: 'searchTradePair',
+        analysisResult: '',
       })
-      ctx.reply(ctx.i18n.t('analysis.inputPair'))
+      ctx.editMessageText(ctx.i18n.t('analysis.inputPair'))
     })
   })
 
@@ -113,9 +123,27 @@ export function defineStartCommand() {
     })
   })
 
-  startMenu.register(searchTradePairMenu)
+  analysisResultMenu.dynamic(async (ctx, analysisResultMenu) => {
+    analysisResultMenu.text(ctx.i18n.t('analysis.result.backToAnalysis'), async (ctx) => {
+      ctx.editMessageText(ctx.i18n.t('analysis.description', { botName: tgBotService.botInfo.username }), { reply_markup: searchTradePairMenu })
+    }).row()
+    analysisResultMenu.switchInline(ctx.i18n.t('analysis.result.share'), ctx.session.analysisResult)
+  })
+
+  notEnoughBalanceMenu.dynamic(async (ctx, notEnoughBalanceMenu) => {
+    notEnoughBalanceMenu.text(ctx.i18n.t('analysis.upgrade'), async (ctx, next) => {
+      tgBotService.dispatchCommand(ctx, next, 'balance')
+    }).row()
+    notEnoughBalanceMenu.text(ctx.i18n.t('analysis.invitation', { cost: CONFIG.COST.INVITE }), (ctx, next) => {
+      tgBotService.dispatchCommand(ctx, next, 'invitation')
+    })
+  })
+
+  // startMenu.register(searchTradePairMenu)
   searchTradePairMenu.register(analysisMenu)
-  tgBotService.use(startMenu)
+  analysisMenu.register(analysisResultMenu)
+  analysisMenu.register(notEnoughBalanceMenu)
+  tgBotService.use(searchTradePairMenu)
   tgBotService.defineCommand({
     command: 'start',
     i18n: true,
@@ -131,7 +159,7 @@ export function defineStartCommand() {
         }
       }
 
-      ctx.reply(ctx.i18n.t('analysis.description'), { reply_markup: startMenu })
+      ctx.reply(ctx.i18n.t('analysis.description', { botName: tgBotService.botInfo.username }), { reply_markup: searchTradePairMenu })
     },
   })
 
@@ -146,8 +174,9 @@ export function defineStartCommand() {
 
     tgBotService.updateSession(ctx, {
       state: 'none',
+      analysisResult: '',
       pair,
     })
-    ctx.reply(ctx.i18n.t('analysis.selectType', { pair }), { reply_markup: analysisMenu })
+    ctx.reply(ctx.i18n.t('analysis.selectType'), { reply_markup: analysisMenu })
   })
 }

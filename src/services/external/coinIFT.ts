@@ -1,6 +1,5 @@
 import type { User } from '@prisma/client'
 import { Service } from '../../common/decorators/service.js'
-import { ApiError, ApiErrorCode } from '../../common/errors.js'
 import { prisma } from '../../common/prisma.js'
 import { CONFIG } from '../../constants/config.js'
 import { ENV } from '../../constants/env.js'
@@ -26,12 +25,12 @@ export class CoinIFTService {
   readonly baseURL = ENV.COIN_IFT_API_URL
   readonly type = WhaleAnalysisType
 
-  isEnoughCost(user: User, cost: number) {
+  isEnoughCost(user: User) {
     if (user.isVip) {
       return true
     }
 
-    return user.coins >= cost
+    return user.coins >= CONFIG.COST.ANALYSIS
   }
 
   async getWhaleAnalysis(symbol: string, type: WhaleAnalysisType) {
@@ -47,10 +46,6 @@ export class CoinIFTService {
   }
 
   async getWhaleAnalysisAndRecord(user: User, symbol: string, type: WhaleAnalysisType) {
-    if (!this.isEnoughCost(user, CONFIG.COST.ANALYSIS)) {
-      throw new ApiError(ApiErrorCode.USER_BALANCE_NOT_ENOUGH, 'User balance not enough')
-    }
-
     const response = await this.getWhaleAnalysis(symbol, type)
     const analysisResult = await prisma.userAnalysisResult.create({
       data: {

@@ -1,6 +1,6 @@
 {
   "balance.message": "📦 您的套餐状态：{plan}  \n🔄 剩余使用次数: {remaining}  \n⏰ 到期日期：{expiresAt}  \n🔥 升级即可解锁全部功能，享受无限使用权限！🔓",
-  "analysis.selectType": "选择你要查询{pair}的交易类型：\n\n ⚡实时查询：清晰当下庄家行为，方便布局交易\n📊日内交易：分析当日庄家行为，适合短线操作\n📈长期持有：分析长期趋势，适合价值投资",
+  "analysis.selectType": "选择你要查询该币种的交易类型：\n\n⚡ 庄家实时监测：实时了解庄家当前行为，适合分钟&小时级超短线交易\n📊 庄家日内动态：分析当日庄家行为，指导日内交易\n📈 长期庄家监测：分析长期庄家资金动向，适合周&月交易",
   "analysis.loading": "正在为您查询......",
   "analysis.realtime": "实时查询",
   "analysis.longterm": "长期持有",
@@ -8,7 +8,7 @@
   "analysis.others": "其他(手动输入)",
   "analysis.inputPair": "请输入你要查询的币种：",
   "analysis.invalidInput": "非法输入，请重新输入你要查询的币种：",
-  "analysis.description": "选择你要查询的交易类型：\n🔥 多单热门/空单热门：捕捉当前大资金动态，多空单布局，寻找投资机会\n📊 币种分析：分析当前庄家行为，寻找短线投资机会和精确投资建议",
+  "analysis.description": "@{botName} 是利用AI 深度学习和链上数据分析来剖析主流加密货币庄家的行为动作，为您提供及时、全面的加密货币庄家动态\n\n👇 选择你想要查询的币种类型：",
   "analysis.tradeAnalysis": "📊币种分析",
   "analysis.multiSinglePopularity": "多单热门🔥",
   "analysis.emptyPopularity": "空单热门🔥",
@@ -34,5 +34,14 @@
   "product.monthly.description": "1 个月高级会员/19.9$",
   "product.yearly.description": "1 年高级会员/169.9$(30%off)",
   "balance.usdt": "请在 *{expiresAt}* 前支付 `{amount}` USDT\n\n支付网络：{network}\n支付地址：`{account}`",
-  "balance.usdt.pay": "👛 使用钱包支付"
+  "balance.usdt.pay": "👛 使用钱包支付",
+  "analysis.result.backToAnalysis": "分析更多币种",
+  "analysis.result.share": "分享",
+  "analysis.result.realtime": "⚡ 当前庄家行为（分钟&小时级监测）：",
+  "analysis.result.intraday": "📊 庄家日内动态（过去24小时庄家行为分析）：",
+  "analysis.result.longterm": "📈 长期庄家检测（过去1年庄家行为分析）：",
+  "analysis.balanceNotEnoughTip": "您当前已无使用次数！",
+  "analysis.balanceNotEnough": "您当前已无使用次数，现在成为会员将享受无限次庄家分析！",
+  "analysis.upgrade": "成为会员",
+  "analysis.invitation": "邀请好友获得{cost}条免费次数"
 }

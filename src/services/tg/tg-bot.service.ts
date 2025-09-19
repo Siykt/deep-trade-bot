@@ -31,6 +31,7 @@ export interface TGBotSessionData {
   user: TGBotUser
   state?: 'searchTradePair' | 'none'
   pair?: string
+  analysisResult?: string
   languageCode?: string
   paymentInfo?: {
     productId?: string
@@ -116,8 +117,6 @@ export class TGBotService extends Bot<TGBotContext, TGBotApi> {
       }
 
       const isPass = this.passUpdates.has(telegramId)
-      logger.debug(`[TGBotService] isPass: ${isPass}`)
-
       // if user is not set, or is not passed, then create a new user
       // if user is set to skip updates, then do not update user
       if (_.isEmpty(ctx.session.user) || !isPass) {
@@ -327,5 +326,9 @@ export class TGBotService extends Bot<TGBotContext, TGBotApi> {
       throw new Error('No type found')
 
     return { type, params: params as T }
+  }
+
+  getShareLink(text: string): `https://t.me/share/url?${string}` {
+    return `https://t.me/share/url?${new URLSearchParams({ text }).toString()}`
   }
 }

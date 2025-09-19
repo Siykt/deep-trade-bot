@@ -1,6 +1,6 @@
 {
   "analysis.loading": "Querying for you...",
-  "analysis.selectType": "Select the transaction type you wish to query for {pair}:\n\n⚡ Real-time Query: Clearly understand current market maker behavior for convenient trade planning  \n📊 Intraday Trading: Analyze the day's market maker activity, suitable for short-term operations  \n📈 Long-term Holding: Analyze long-term trends, ideal for value investing",
+  "analysis.selectType": "Select the transaction type you wish to query for this currency:\n\n⚡ Real-time Dealer Monitoring: Stay updated on dealers' current activities, suitable for minute & hourly ultra-short-term trading  \n📊 Intraday Dealer Dynamics: Analyze dealers' daily behavior to guide day trading  \n📈 Long-term Dealer Monitoring: Track long-term dealer capital movements, ideal for weekly & monthly trading",
   "balance.message": "📦 Your Plan Status: {plan}  \n🔄 Remaining Uses: {remaining}  \n⏰ Expiration Date: {expiresAt}  \n🔥 Upgrade now to unlock all features and enjoy unlimited access! 🔓",
   "analysis.realtime": "Realtime",
   "analysis.longterm": "Longterm",
@@ -8,7 +8,7 @@
   "analysis.others": "Others",
   "analysis.inputPair": "Please enter the pair you wish to query:",
   "analysis.invalidInput": "Invalid input, please enter the pair you wish to query:",
-  "analysis.description": "Gather global mainstream exchanges and chain data, understand market maker behavior in one second",
+  "analysis.description": "@{botName} utilizes AI deep learning and on-chain data analysis to dissect the behaviors of major cryptocurrency whales, providing you with timely and comprehensive insights into their activities.\n\n👇 Select the type of cryptocurrency you wish to inquire about:",
   "command.start.description": "Gather global mainstream exchanges and chain data, understand market maker behavior in one second",
   "analysis.emptyPopularity": "Hot Short Orders 🔥",
   "analysis.multiSinglePopularity": "Hot buy orders 🔥",
@@ -34,5 +34,14 @@
   "product.monthly.description": "1 Month Premium/19.9$",
   "product.yearly.description": "1 Year Premium/169.9$(30%off)",
   "balance.usdt": "Please pay `{amount}` USDT before *{expiresAt}*.\n\nPayment Network: {network}\nPayment Address: `{account}`",
-  "balance.usdt.pay": "👛 Pay with wallet"
+  "balance.usdt.pay": "👛 Pay with wallet",
+  "analysis.balanceNotEnough": "You have no remaining uses. Become a member now to enjoy unlimited dealer analysis!",
+  "analysis.balanceNotEnoughTip": "You currently have no usage times left!",
+  "analysis.invitation": "Invite friends to get {cost} free attempts.",
+  "analysis.result.backToAnalysis": "Analyze more currencies",
+  "analysis.result.intraday": "📊 Dealer's Intraday Dynamics (Analysis of Dealer Activities in the Past 24 Hours):",
+  "analysis.result.longterm": "📈 Long-term Market Maker Detection (Analysis of Market Maker Behavior Over the Past Year):",
+  "analysis.result.realtime": "⚡ Current Dealer Activity (Minute & Hourly Monitoring):",
+  "analysis.result.share": "Share",
+  "analysis.upgrade": "Become a member"
 }
