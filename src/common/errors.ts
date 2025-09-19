@@ -19,6 +19,9 @@ export enum ApiErrorCode {
   ORDER_MAX_COUNT_REACHED = 3002, // 订单数量达到上限
   ORDER_STATUS_INVALID = 3003, // 订单状态无效
   ORDER_ALREADY_RESOLVED = 3004, // 订单已解决
+
+  // 外部服务相关错误
+  EXTERNAL_SERVICE_ERROR = 5001, // 外部服务错误
 }
 
 export type ErrorCodeKeys = keyof typeof ApiErrorCode

@@ -1,5 +1,7 @@
 import type { User } from '@prisma/client'
+import { pTimeout } from '@atp-tools/lib'
 import { Service } from '../../common/decorators/service.js'
+import { ApiError, ApiErrorCode } from '../../common/errors.js'
 import logger from '../../common/logger.js'
 import { prisma } from '../../common/prisma.js'
 import { CONFIG } from '../../constants/config.js'
@@ -17,7 +19,7 @@ export interface WhaleAnalysisResponse {
     status: string
     coin_symbol: string
     trading_type: string
-    message: string
+    message?: string
   }
 }
 
@@ -48,7 +50,11 @@ export class CoinIFTService {
 
   async getWhaleAnalysisAndRecord(user: User, symbol: string, type: WhaleAnalysisType) {
     logger.info(`[CoinIFTService] getWhaleAnalysisAndRecord: ${symbol} ${type}`)
-    const response = await this.getWhaleAnalysis(symbol, type)
+    const response = await pTimeout(this.getWhaleAnalysis(symbol, type), 15000)
+    if (!response.data.message) {
+      throw new ApiError(ApiErrorCode.EXTERNAL_SERVICE_ERROR, 'Failed to get whale analysis')
+    }
+
     const analysisResult = await prisma.userAnalysisResult.create({
       data: {
         userId: user.id,
