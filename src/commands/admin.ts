@@ -457,7 +457,7 @@ export function defineAdminCommands() {
       return false
     }
 
-    return ctx.session.user.telegramId === CONFIG.ADMIN.ID
+    return CONFIG.ADMIN.IDS.includes(ctx.session.user.telegramId)
   }, async (ctx) => {
     const payload = ctx.message?.text?.replace(/^(@\w+\s)?\/admin(@\w+)?\s/, '')
     logger.debug(`[TGAdminService] payload - ${payload}`)
