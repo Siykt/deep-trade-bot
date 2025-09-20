@@ -151,7 +151,7 @@ export function defineBalanceCommand() {
         ctx.i18n.t(product.name),
         ctx.session.languageCode,
       )
-      ctx.replyWithPhoto(new InputFile(await QRCode.toBuffer(account, { width: 512 })), {
+      const { message_id } = await ctx.replyWithPhoto(new InputFile(await QRCode.toBuffer(account, { width: 512 })), {
         caption: formatMarkdownMessages(ctx.i18n.t('balance.usdt', {
           account,
           amount,
@@ -161,6 +161,14 @@ export function defineBalanceCommand() {
         parse_mode: 'MarkdownV2',
         reply_markup: new InlineKeyboard().url(ctx.i18n.t('balance.usdt.pay'), paymentLink),
       })
+
+      setTimeout(() => {
+        tgBotService.api.editMessageCaption(chatId, message_id, {
+          caption: ctx.i18n.t('balance.usdt.expired'),
+          parse_mode: 'MarkdownV2',
+          reply_markup: undefined,
+        })
+      }, utcNow(expireAt).diff(utcNow(), 'ms'))
     })
 
     range.row()

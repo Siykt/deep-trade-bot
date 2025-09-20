@@ -43,5 +43,6 @@
   "analysis.balanceNotEnoughTip": "您当前已无使用次数！",
   "analysis.balanceNotEnough": "您当前已无使用次数，现在成为会员将享受无限次庄家分析！",
   "analysis.upgrade": "成为会员",
-  "analysis.invitation": "邀请好友获得{cost}条免费次数"
+  "analysis.invitation": "邀请好友获得{cost}条免费次数",
+  "balance.usdt.expired": "⚠️ 订单已过期，请重新生成订单"
 }

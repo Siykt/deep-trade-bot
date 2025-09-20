@@ -654,7 +654,7 @@ export class OrderService {
           amount,
           fiatAmount,
           exchangeRate: 1,
-          expireAt: new Date(Date.now() + 3600 * 1000), // 1 hour
+          expireAt: new Date(Date.now() + CONFIG.PAYMENT.ORDER_EXPIRE_TIME * 1000),
           rateValidSeconds: 3600,
           customExpiration: 3600,
           paymentData: safeStringify({
@@ -687,6 +687,7 @@ export class OrderService {
       title,
       qrcodeType: 'address',
       lang: languageCode,
+      expireTime: order.expireAt,
     })
 
     logger.info(`[OrderService] Created USDT order for user [${user.username}], orderId: ${order.id}, paymentLink: ${paymentLink}`)

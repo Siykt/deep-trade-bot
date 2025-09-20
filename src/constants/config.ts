@@ -53,6 +53,8 @@ export const CONFIG = {
       MIN_AMOUNT: 1,
       MAX_AMOUNT: 100000,
     },
+    // 订单过期时间, 单位秒
+    ORDER_EXPIRE_TIME: 3600,
   },
 
   // 产品配置

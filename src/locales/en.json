@@ -43,5 +43,6 @@
   "analysis.result.longterm": "📈 Long-term Market Maker Detection (Analysis of Market Maker Behavior Over the Past Year):",
   "analysis.result.realtime": "⚡ Current Dealer Activity (Minute & Hourly Monitoring):",
   "analysis.result.share": "Share",
-  "analysis.upgrade": "Become a member"
+  "analysis.upgrade": "Become a member",
+  "balance.usdt.expired": "⚠️ Order has expired, please regenerate the order."
 }

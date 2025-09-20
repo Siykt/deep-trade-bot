@@ -23,6 +23,7 @@ export interface FullChainUSDTPaymentLinkParams {
   chain: number
   qrcodeType?: 'address' | 'eip681'
   title: string
+  expireTime: Date
   lang?: string
 }
 
@@ -59,13 +60,14 @@ export class UsdtPaymentService {
   }
 
   getPaymentLink(fullChainUSDTPaymentLinkParams: FullChainUSDTPaymentLinkParams) {
-    const { chain, to, amount, orderId, qrcodeType, title, lang } = fullChainUSDTPaymentLinkParams
+    const { chain, to, amount, orderId, qrcodeType, title, lang, expireTime } = fullChainUSDTPaymentLinkParams
     const url = new URL('https://fullchain-usdt-pay-fe.pages.dev/')
     url.searchParams.set('orderId', orderId)
     url.searchParams.set('amount', amount.toString())
     url.searchParams.set('to', to)
     url.searchParams.set('chain', chain.toString())
     url.searchParams.set('title', title)
+    url.searchParams.set('expireTime', expireTime.getTime().toString())
     if (qrcodeType) {
       url.searchParams.set('qrcodeType', qrcodeType)
     }
