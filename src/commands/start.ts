@@ -25,6 +25,7 @@ async function answerWhaleAnalysis(ctx: TGBotContext, type: WhaleAnalysisType) {
   }
 
   ctx.answerCallbackQuery({ text: ctx.i18n.t('analysis.loading') })
+  ctx.react('👌')
   if (!ctx.session.user.isVip) {
     await tgBotService.updateSessionUserCoins(ctx, -CONFIG.COST.ANALYSIS)
   }
@@ -42,6 +43,7 @@ async function answerWhaleAnalysis(ctx: TGBotContext, type: WhaleAnalysisType) {
     logger.info(`analysisResult: ${result}`)
     tgBotService.updateSession(ctx, { analysisResult: result })
     ctx.editMessageText(result, { reply_markup: analysisResultMenu })
+    ctx.react('🐳')
   }
   catch (error) {
     logger.error(`[TgGenerationService] answerWhaleAnalysis: ${error}`)
@@ -49,6 +51,7 @@ async function answerWhaleAnalysis(ctx: TGBotContext, type: WhaleAnalysisType) {
     if (!ctx.session.user.isVip) {
       await tgBotService.updateSessionUserCoins(ctx, CONFIG.COST.ANALYSIS)
     }
+    ctx.react('💔')
   }
 }
 
@@ -97,7 +100,6 @@ export function defineStartCommand() {
   searchTradePairMenu.dynamic(async (ctx, searchTradePairMenu) => {
     searchTradePairMenu.text(ctx.i18n.t('analysis.others'), async (ctx) => {
       tgBotService.updateSession(ctx, {
-        state: 'searchTradePair',
         analysisResult: '',
       })
       ctx.reply(ctx.i18n.t('analysis.inputPair'))
@@ -167,7 +169,22 @@ export function defineStartCommand() {
   })
 
   tgBotService.on('message').filter((ctx) => {
-    return ctx.msg.chat.type === 'private' && ctx.session.state === 'searchTradePair'
+    const message = ctx.msg
+    if (!message || !message.text) {
+      return false
+    }
+
+    // 非命令
+    if (message.text.includes('/')) {
+      return false
+    }
+
+    // 仅私聊
+    if (ctx.msg.chat.type !== 'private') {
+      return false
+    }
+
+    return true
   }, async (ctx) => {
     const pair = ctx.msg.text?.trim().toUpperCase()
     if (!pair) {
@@ -176,7 +193,6 @@ export function defineStartCommand() {
     }
 
     tgBotService.updateSession(ctx, {
-      state: 'none',
       analysisResult: '',
       pair,
     })

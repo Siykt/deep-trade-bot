@@ -29,7 +29,7 @@ export type TGBotUser = User & {
 
 export interface TGBotSessionData {
   user: TGBotUser
-  state?: 'searchTradePair' | 'none'
+  state?: 'none'
   pair?: string
   analysisResult?: string
   languageCode?: string
