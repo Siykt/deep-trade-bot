@@ -156,7 +156,7 @@ export function defineBalanceCommand() {
           account,
           amount,
           network: chain.name,
-          expiresAt: utcNow(expireAt).format('YYYY-MM-DD HH:mm:ss'),
+          expiresAt: utcNow(expireAt).format('YYYY-MM-DD HH:mm:ss(UTC+0)'),
         })),
         parse_mode: 'MarkdownV2',
         reply_markup: new InlineKeyboard().url(ctx.i18n.t('balance.usdt.pay'), paymentLink),
