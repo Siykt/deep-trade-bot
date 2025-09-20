@@ -1,8 +1,9 @@
 import type { WhaleAnalysisType } from '../services/external/coinIFT.js'
 import type { TGBotContext } from '../services/tg/tg-bot.service.js'
+import { formatTime } from '../common/date.js'
 import logger from '../common/logger.js'
 import { CONFIG } from '../constants/config.js'
-import { chatGPTService, coinIFTService, tgBotService, userService } from '../services/index.js'
+import { coinIFTService, tgBotService, userService } from '../services/index.js'
 
 const startMenu = tgBotService.createMenu('start')
 const searchTradePairMenu = tgBotService.createMenu('searchTradePair')
@@ -30,17 +31,13 @@ async function answerWhaleAnalysis(ctx: TGBotContext, type: WhaleAnalysisType) {
     await tgBotService.updateSessionUserCoins(ctx, -CONFIG.COST.ANALYSIS)
   }
 
+  const lang = ctx.session.languageCode ?? 'zh'
+
   try {
-    let { result } = await coinIFTService.getWhaleAnalysisAndRecord(ctx.session.user, ctx.session.pair, type)
-    if (ctx.session.languageCode !== 'zh') {
-      result = await chatGPTService.translate(result, 'zh', ctx.session.languageCode as string)
+    let { result } = await coinIFTService.getWhaleAnalysisAndRecord(ctx.session.user, ctx.session.pair, type, lang)
 
-      // 将en中的Market Maker替换成Whale，不区分大小写
-      result = result.replace(/market maker/gi, 'Whale')
-    }
-
-    result = `${ctx.i18n.t(`analysis.result.${type}`)}\n\n${result}`
-    logger.info(`analysisResult: ${result}`)
+    // 合并
+    result = `${ctx.i18n.t(`analysis.result.${type}`)}\n\n${result}\n\n${formatTime(new Date())}(UTC+0)`
     tgBotService.updateSession(ctx, { analysisResult: result })
     ctx.editMessageText(result, { reply_markup: analysisResultMenu })
     ctx.react('🐳')
