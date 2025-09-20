@@ -267,7 +267,7 @@ export class OrderService {
         const repeatValue = simpleTransactions.get(transaction.args.to)
         const value = (repeatValue?.value || 0n) + (transaction.args.value || 0n)
         if (value) {
-          simpleTransactions.set(transaction.args.to, {
+          simpleTransactions.set(transaction.args.to.toLowerCase(), {
             value,
             tx: transaction.transactionHash,
             blockNumber: transaction.blockNumber,
@@ -286,19 +286,19 @@ export class OrderService {
     }
 
     logger.info(`[OrderService] Found ${simpleTransactions.size} transactions`)
+    const decimals = await this.usdtPaymentService.getDecimals()
 
     for (const order of orders) {
       const paymentData = JSON.parse(order.paymentData as string)
-      const transaction = simpleTransactions.get(paymentData.account as string)
-
+      const transaction = simpleTransactions.get(paymentData.account?.toLowerCase() as string)
       if (!transaction) {
         continue
       }
 
-      if (order.amount.eq(bigint2amount(transaction.value, 6))) {
+      if (order.amount.eq(bigint2amount(transaction.value, decimals))) {
         await this.updateStatus(order.id, OrderStatus.SUCCESS, {
           transactionId: transaction.tx,
-          paymentData: JSON.stringify({
+          paymentData: safeStringify({
             ...paymentData,
             from: transaction.from,
             tx: transaction.tx,
@@ -605,44 +605,16 @@ export class OrderService {
     return { order, message }
   }
 
-  private getUsdtPaymentAccountNextIndex() {
-    const key = 'usdt-payment-account-next-index'
-    return AsyncLock.instance.execute(`usdt-payment-account-index:lock`, async () => {
-      const accountIndex = await prisma.telegramMessageSession.findUnique({
-        where: {
-          key,
-        },
-        select: {
-          value: true,
-        },
-      })
-
-      await prisma.telegramMessageSession.upsert({
-        where: {
-          key,
-        },
-        create: {
-          key,
-          value: '1',
-        },
-        update: {
-          value: (Number(accountIndex?.value) + 1).toString(),
-        },
-      })
-
-      return Number(accountIndex?.value || 0)
-    })
-  }
-
   async createProduceOrderWithUsdt(user: User, productId: string, quantity: number, title: string, languageCode?: string) {
     const product = await this.productService.findByIdOrThrow(productId)
     const fiatAmount = isDev() ? 0.01 : product.price.mul(quantity).toNumber()
     const amount = fiatAmount
-    const accountIndex = await this.getUsdtPaymentAccountNextIndex()
+    const accountIndex = await this.usdtPaymentService.getUsdtPaymentAccountNextIndex()
     const chain = this.usdtPaymentService.supportChains.get(CONFIG.USDT_PAYMENT_CHAIN_ID) as Chain
     const account = await this.usdtPaymentService.getAccount(chain.id, accountIndex)
     const blockNumber = await this.usdtPaymentService.getCurrentBlockNumber(chain.id)
 
+    logger.debug(`[OrderService] createProduceOrderWithUsdt - blockNumber: ${blockNumber}`)
     logger.info(`[OrderService] Creating USDT order for user [${user.username}], product: ${product.name}, quantity: ${quantity}, fiatAmount: $${fiatAmount}, amount: ${amount}USDT, account: ${account.address}, accountIndex: ${accountIndex}`)
 
     const order = await prisma.$transaction(async (tx) => {
@@ -692,10 +664,8 @@ export class OrderService {
 
     logger.info(`[OrderService] Created USDT order for user [${user.username}], orderId: ${order.id}, paymentLink: ${paymentLink}`)
 
-    await prisma.order.update({
-      where: { id: order.id },
-      data: { paymentLink },
-    })
+    // 直接更新订单状态为处理中, 并设置支付链接
+    await this.updateStatus(order.id, OrderStatus.PROCESSING, { paymentLink })
 
     logger.info(`[OrderService] Created USDT order for user [${user.username}], orderId: ${order.id}`)
     return {
