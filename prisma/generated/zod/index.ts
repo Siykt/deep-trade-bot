@@ -49,7 +49,7 @@ export const ProductScalarFieldEnumSchema = z.enum(['id','name','description','t
 
 export const TelegramMessageSessionScalarFieldEnumSchema = z.enum(['id','key','value']);
 
-export const UserAnalysisResultScalarFieldEnumSchema = z.enum(['id','symbol','type','result','userId','cost','createdAt']);
+export const UserAnalysisResultScalarFieldEnumSchema = z.enum(['id','symbol','type','result','userId','cost','lang','createdAt']);
 
 export const SortOrderSchema = z.enum(['asc','desc']);
 
@@ -419,6 +419,10 @@ export const UserAnalysisResultSchema = z.object({
    * 消耗
    */
   cost: z.number().int(),
+  /**
+   * 语言
+   */
+  lang: z.string(),
   createdAt: z.coerce.date(),
 })
 
@@ -709,6 +713,7 @@ export const UserAnalysisResultSelectSchema: z.ZodType<Prisma.UserAnalysisResult
   result: z.boolean().optional(),
   userId: z.boolean().optional(),
   cost: z.boolean().optional(),
+  lang: z.boolean().optional(),
   createdAt: z.boolean().optional(),
   User: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
 }).strict()
@@ -1467,6 +1472,7 @@ export const UserAnalysisResultWhereInputSchema: z.ZodType<Prisma.UserAnalysisRe
   result: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   userId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   cost: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
+  lang: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   User: z.union([ z.lazy(() => UserRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
 }).strict();
@@ -1478,6 +1484,7 @@ export const UserAnalysisResultOrderByWithRelationInputSchema: z.ZodType<Prisma.
   result: z.lazy(() => SortOrderSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
   cost: z.lazy(() => SortOrderSchema).optional(),
+  lang: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   User: z.lazy(() => UserOrderByWithRelationInputSchema).optional()
 }).strict();
@@ -1495,6 +1502,7 @@ export const UserAnalysisResultWhereUniqueInputSchema: z.ZodType<Prisma.UserAnal
   result: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   userId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   cost: z.union([ z.lazy(() => IntFilterSchema),z.number().int() ]).optional(),
+  lang: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   User: z.union([ z.lazy(() => UserRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
 }).strict());
@@ -1506,6 +1514,7 @@ export const UserAnalysisResultOrderByWithAggregationInputSchema: z.ZodType<Pris
   result: z.lazy(() => SortOrderSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
   cost: z.lazy(() => SortOrderSchema).optional(),
+  lang: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   _count: z.lazy(() => UserAnalysisResultCountOrderByAggregateInputSchema).optional(),
   _avg: z.lazy(() => UserAnalysisResultAvgOrderByAggregateInputSchema).optional(),
@@ -1524,6 +1533,7 @@ export const UserAnalysisResultScalarWhereWithAggregatesInputSchema: z.ZodType<P
   result: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   userId: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   cost: z.union([ z.lazy(() => IntWithAggregatesFilterSchema),z.number() ]).optional(),
+  lang: z.union([ z.lazy(() => StringWithAggregatesFilterSchema),z.string() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
 }).strict();
 
@@ -2250,6 +2260,7 @@ export const UserAnalysisResultCreateInputSchema: z.ZodType<Prisma.UserAnalysisR
   type: z.string(),
   result: z.string(),
   cost: z.number().int().optional(),
+  lang: z.string().optional(),
   createdAt: z.coerce.date().optional(),
   User: z.lazy(() => UserCreateNestedOneWithoutUserAnalysisResultInputSchema)
 }).strict();
@@ -2261,6 +2272,7 @@ export const UserAnalysisResultUncheckedCreateInputSchema: z.ZodType<Prisma.User
   result: z.string(),
   userId: z.string(),
   cost: z.number().int().optional(),
+  lang: z.string().optional(),
   createdAt: z.coerce.date().optional()
 }).strict();
 
@@ -2270,6 +2282,7 @@ export const UserAnalysisResultUpdateInputSchema: z.ZodType<Prisma.UserAnalysisR
   type: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   result: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   cost: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  lang: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   User: z.lazy(() => UserUpdateOneRequiredWithoutUserAnalysisResultNestedInputSchema).optional()
 }).strict();
@@ -2281,6 +2294,7 @@ export const UserAnalysisResultUncheckedUpdateInputSchema: z.ZodType<Prisma.User
   result: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   cost: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  lang: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
@@ -2291,6 +2305,7 @@ export const UserAnalysisResultCreateManyInputSchema: z.ZodType<Prisma.UserAnaly
   result: z.string(),
   userId: z.string(),
   cost: z.number().int().optional(),
+  lang: z.string().optional(),
   createdAt: z.coerce.date().optional()
 }).strict();
 
@@ -2300,6 +2315,7 @@ export const UserAnalysisResultUpdateManyMutationInputSchema: z.ZodType<Prisma.U
   type: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   result: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   cost: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  lang: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
@@ -2310,6 +2326,7 @@ export const UserAnalysisResultUncheckedUpdateManyInputSchema: z.ZodType<Prisma.
   result: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   userId: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   cost: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  lang: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
@@ -2970,6 +2987,7 @@ export const UserAnalysisResultCountOrderByAggregateInputSchema: z.ZodType<Prism
   result: z.lazy(() => SortOrderSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
   cost: z.lazy(() => SortOrderSchema).optional(),
+  lang: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
@@ -2984,6 +3002,7 @@ export const UserAnalysisResultMaxOrderByAggregateInputSchema: z.ZodType<Prisma.
   result: z.lazy(() => SortOrderSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
   cost: z.lazy(() => SortOrderSchema).optional(),
+  lang: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
@@ -2994,6 +3013,7 @@ export const UserAnalysisResultMinOrderByAggregateInputSchema: z.ZodType<Prisma.
   result: z.lazy(() => SortOrderSchema).optional(),
   userId: z.lazy(() => SortOrderSchema).optional(),
   cost: z.lazy(() => SortOrderSchema).optional(),
+  lang: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
@@ -4229,6 +4249,7 @@ export const UserAnalysisResultCreateWithoutUserInputSchema: z.ZodType<Prisma.Us
   type: z.string(),
   result: z.string(),
   cost: z.number().int().optional(),
+  lang: z.string().optional(),
   createdAt: z.coerce.date().optional()
 }).strict();
 
@@ -4238,6 +4259,7 @@ export const UserAnalysisResultUncheckedCreateWithoutUserInputSchema: z.ZodType<
   type: z.string(),
   result: z.string(),
   cost: z.number().int().optional(),
+  lang: z.string().optional(),
   createdAt: z.coerce.date().optional()
 }).strict();
 
@@ -4550,6 +4572,7 @@ export const UserAnalysisResultScalarWhereInputSchema: z.ZodType<Prisma.UserAnal
   result: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   userId: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   cost: z.union([ z.lazy(() => IntFilterSchema),z.number() ]).optional(),
+  lang: z.union([ z.lazy(() => StringFilterSchema),z.string() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
 }).strict();
 
@@ -6047,6 +6070,7 @@ export const UserAnalysisResultCreateManyUserInputSchema: z.ZodType<Prisma.UserA
   type: z.string(),
   result: z.string(),
   cost: z.number().int().optional(),
+  lang: z.string().optional(),
   createdAt: z.coerce.date().optional()
 }).strict();
 
@@ -6328,6 +6352,7 @@ export const UserAnalysisResultUpdateWithoutUserInputSchema: z.ZodType<Prisma.Us
   type: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   result: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   cost: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  lang: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
@@ -6337,6 +6362,7 @@ export const UserAnalysisResultUncheckedUpdateWithoutUserInputSchema: z.ZodType<
   type: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   result: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   cost: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  lang: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
@@ -6346,6 +6372,7 @@ export const UserAnalysisResultUncheckedUpdateManyWithoutUserInputSchema: z.ZodT
   type: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   result: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   cost: z.union([ z.number().int(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
+  lang: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 

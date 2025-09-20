@@ -240,6 +240,8 @@ model UserAnalysisResult {
   User   User   @relation(fields: [userId], references: [id])
   /// 消耗
   cost   Int    @default(0)
+  /// 语言
+  lang   String   @default("zh")
 
   createdAt DateTime @default(now())
 }
